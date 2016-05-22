@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">IRememeber</string>
+    <string name="user_name">البريد الألكتروني</string>
+    <string name="password">كلمة السر</string>
+    <string name="login">دخول</string>
+    <string name="signUpLink">هل أنت جديد ؟ سجّل الآن!</string>
+</resources>

@@ -1,0 +1,43 @@
+<resources>
+    <string name="app_name">IRememeber</string>
+    <string name="user_name">Email</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="signUpLink">Sign Up For A New Account</string>
+    <string name="next">Next</string>
+    <string name="firstname">First name</string>
+    <string name="lastname">Last name</string>
+    <string name="phoneNumber">Phone Number</string>
+    <string name="email">Email</string>
+    <string name="home_number">Home Number</string>
+    <string name="item_image_contentDescription">Country flag</string>
+    <string name="item_preview_country">Palestine (‫فلسطين)</string>
+    <string name="item_preview_dialCode">+972</string>
+    <string name="birthdate">Birthdate ex: YYYY/MM/dd</string>
+    <string name="gender">Gender</string>
+    <string name="password_confirm">Password Confirmation</string>
+    <string name="home_address">Home Address</string>
+    <string name="country_address">Country Address</string>
+    <string name="city_address">City Address</string>
+    <string name="get_myhome_address">Get My Home Address</string>
+    <string name="firstname_is_required">First Name is Required</string>
+    <string name="lastname_is_required">Last Name is Required</string>
+    <string name="invalid_home_number">Invalid Number ex: +206630402 </string>
+    <string name="birthdate_error">You Must Pick A Birthdate</string>
+    <string name="invalid_email">Invalid Email</string>
+    <string name="invalid_password">Password must be from 6 - 20 Characters</string>
+    <string name="passwords_not_matched">Passwords are not matched</string>
+    <string name="register">Register</string>
+    <string name="gps_not_available">Error: GPS service is not available</string>
+    <string name="login_failed">Login Failed</string>
+
+    <string-array name="gender">
+        <item>Male</item>
+        <item>Female</item>
+    </string-array>
+
+    <string-array name="type">
+        <item>Patient</item>
+        <item>Relative</item>
+    </string-array>
+</resources>
