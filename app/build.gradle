@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "wmad.iti.irememeber"
-        minSdkVersion 18
+        minSdkVersion 14
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
@@ -32,4 +32,8 @@ dependencies {
     compile 'com.google.code.gson:gson:2.6.2'
     compile 'com.android.support:recyclerview-v7:23.0.0'
     compile 'com.android.support:cardview-v7:23.0.0'
+    compile 'com.squareup.picasso:picasso:2.5.0'
+    compile 'com.google.code.gson:gson:2.6.2'
+    compile "com.facebook.fresco:fresco:0.7.0"
+    compile 'com.koushikdutta.ion:ion:2.+'
 }

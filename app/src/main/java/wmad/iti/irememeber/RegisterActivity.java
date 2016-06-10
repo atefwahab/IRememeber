@@ -3,8 +3,10 @@ package wmad.iti.irememeber;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Address;
@@ -27,6 +29,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -39,6 +42,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.places.Place;
@@ -46,7 +50,10 @@ import com.google.android.gms.location.places.Places;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
+import com.koushikdutta.async.future.FutureCallback;
+import com.koushikdutta.ion.Ion;
 import com.mikhaellopez.circularimageview.CircularImageView;
 
 import net.rimoto.intlphoneinput.IntlPhoneInput;
@@ -67,6 +74,7 @@ import wmad.iti.dto.Status;
 import wmad.iti.dto.User;
 import wmad.iti.model.GsonRequest;
 import wmad.iti.model.MySingleton;
+import wmad.iti.model.SharedPreferenceManager;
 import wmad.iti.util.Validator;
 
 public class RegisterActivity extends AppCompatActivity implements BirthdateInterface, AdapterView.OnItemSelectedListener {
@@ -78,7 +86,10 @@ public class RegisterActivity extends AppCompatActivity implements BirthdateInte
     Calendar birthdate;
     File photoFile = null;
     String mCurrentPhotoPath;
+    String imagePath=null;
+    ProgressDialog registerProgressDialog;
 
+    ProgressDialog getlocationProgressDialog;
 
 
     IntlPhoneInput phoneInputView;
@@ -140,6 +151,11 @@ public class RegisterActivity extends AppCompatActivity implements BirthdateInte
     Spinner personTypeSpinner;
     Spinner genderSpinner;
 
+
+
+    // Request queue Instance ..
+    RequestQueue queue;
+
     // Strings
     String city=null;
     String country =null;
@@ -151,6 +167,7 @@ public class RegisterActivity extends AppCompatActivity implements BirthdateInte
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+
 
 
         scrollView= (ScrollView) findViewById(R.id.scrollView);
@@ -180,7 +197,7 @@ public class RegisterActivity extends AppCompatActivity implements BirthdateInte
         // Person type spinner
         personTypeSpinner = (Spinner) findViewById(R.id.peronTypeSpinner);
         // Create an ArrayAdapter using the string array and a default spinner layout
-         personTypeadapter = ArrayAdapter.createFromResource(this,
+        personTypeadapter = ArrayAdapter.createFromResource(this,
                 R.array.type, android.R.layout.simple_spinner_item);
         // Specify the layout to use when the list of choices appears
         personTypeadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -326,10 +343,10 @@ public class RegisterActivity extends AppCompatActivity implements BirthdateInte
 
 
         // get spinner object
-         genderSpinner = (Spinner) findViewById(R.id.genderSpinner);
+        genderSpinner = (Spinner) findViewById(R.id.genderSpinner);
 
         // Create an ArrayAdapter using the string array and a default spinner layout
-         genderAdapter = ArrayAdapter.createFromResource(this, R.array.gender, android.R.layout.simple_spinner_item);
+        genderAdapter = ArrayAdapter.createFromResource(this, R.array.gender, android.R.layout.simple_spinner_item);
 
         // Specify the layout to use when the list of choices appears
         genderAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -350,9 +367,12 @@ public class RegisterActivity extends AppCompatActivity implements BirthdateInte
             @Override
             public void onClick(View v) {
 
+                // Show Loading location Progress ..
+                getlocationProgressDialog= ProgressDialog.show(getApplicationContext(),getResources().getString(R.string.getting_location),getResources().getString(R.string.please_wait),false,false);
                 // place picker
                 PlacePicker.IntentBuilder intentBuilder = new PlacePicker.IntentBuilder();
                 try {
+
                     startActivityForResult(intentBuilder.build(RegisterActivity.this), REQUEST_PLAC_PICKER);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -464,41 +484,50 @@ public class RegisterActivity extends AppCompatActivity implements BirthdateInte
             // Place Picker case
             case REQUEST_PLAC_PICKER:
 
-                    if (resultCode == RESULT_OK) {
-                        Place place = PlacePicker.getPlace(data, this);
 
-                        homeLatitude=place.getLatLng().latitude;
-                        homeLongitude=place.getLatLng().longitude;
+                if (resultCode == RESULT_OK) {
+                    Place place = PlacePicker.getPlace(data, this);
 
-                        address = String.format("Place: %s", place.getName());
-                        Geocoder geocoder=new Geocoder(getApplicationContext(), Locale.getDefault());
+                    homeLatitude=place.getLatLng().latitude;
+                    homeLongitude=place.getLatLng().longitude;
 
-                        try {
-                            List<Address> addressList = geocoder.getFromLocation(homeLatitude,homeLongitude, 1);
-                            // 0 index in object is containing the whole address
-                           // address = addressList.get(0).getAddressLine(0);
+                    address = String.format("%s", place.getAddress());
+                    Log.e("address",address);
+                    Geocoder geocoder=new Geocoder(getApplicationContext(), Locale.getDefault());
 
-                            // 1 contains the city
-                            city = addressList.get(0).getAddressLine(1);
+                    try {
+                        List<Address> addressList = geocoder.getFromLocation(homeLatitude,homeLongitude, 1);
+                        // 0 index in object is containing the whole address
 
-                            // 2 contains country
-                            country = addressList.get(0).getCountryName();
+                        // getting address if it didn't come from PlacePicker API
+                        if(address==null||address.equals("")){
 
-
-                        } catch (IOException e) {
-                            e.printStackTrace();
-
+                            address = addressList.get(0).getAddressLine(0);
                         }
-                        String homeAddress = String.format("%s", place.getName());
-                        homeAddressEditText.setText(address);
-                        cityAddressEditText.setText(city);
-                        countryAddressEditText.setText(country);
-
-                        registerButton.setVisibility(View.VISIBLE);
 
 
+                        // 1 contains the city
+                        city = addressList.get(0).getAddressLine(1);
+
+                        // 2 contains country
+                        country = addressList.get(0).getCountryName();
+
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
 
                     }
+                    String homeAddress = String.format("%s", place.getAddress());
+                    homeAddressEditText.setText(address);
+                    cityAddressEditText.setText(city);
+                    countryAddressEditText.setText(country);
+
+
+                    registerButton.setVisibility(View.VISIBLE);
+
+
+
+                }
                 if(resultCode==PlacePicker.RESULT_ERROR){
 
                     Toast.makeText(getApplicationContext(),getResources().getString(R.string.gps_not_available),Toast.LENGTH_LONG);
@@ -549,6 +578,7 @@ public class RegisterActivity extends AppCompatActivity implements BirthdateInte
         bmOptions.inSampleSize = scaleFactor;
         bmOptions.inPurgeable = true;
 
+        imagePath = photoFile.getAbsolutePath();
         Bitmap bitmap = BitmapFactory.decodeFile(photoFile.getPath(), bmOptions);
         circularImageView.setImageBitmap(bitmap);
     }
@@ -560,6 +590,8 @@ public class RegisterActivity extends AppCompatActivity implements BirthdateInte
         if (data != null) {
             Log.i("******* ", data.getData().toString());
             try {
+                // to know path of image
+                imagePath = getRealPathFromURI(data.getData());
                 image = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), data.getData());
                 circularImageView.setImageBitmap(image);
             } catch (IOException e) {
@@ -582,7 +614,7 @@ public class RegisterActivity extends AppCompatActivity implements BirthdateInte
 
         Calendar calendar = Calendar.getInstance();
         calendar.set(year, month, day);
-        calendar.set(year, month, day);
+
         // get date object from Calendar to print date
         Date date = calendar.getTime();
         this.birthdate = calendar;
@@ -614,29 +646,29 @@ public class RegisterActivity extends AppCompatActivity implements BirthdateInte
 
 
 
-           if (parent.getItemAtPosition(position).toString().equals("Male")) {
+        if (parent.getItemAtPosition(position).toString().equals("Male")) {
 
-               Log.i("Spinner","male");
-               //male
-               gender = 1;
+            Log.i("Spinner","male");
+            //male
+            gender = 1;
 
 
-           }
+        }
         if(parent.getItemAtPosition(position).toString().equals(getResources().getStringArray(R.array.gender)[1])){
 
-               // female
-               gender = 0;
-           }
+            // female
+            gender = 0;
+        }
 
 
 
         // patient
         if (parent.getItemAtPosition(position).toString().equals(getResources().getStringArray(R.array.type)[0])) {
 
-                type=1;
+            type=1;
 
 
-            }
+        }
 
         // relative
 
@@ -735,7 +767,7 @@ public class RegisterActivity extends AppCompatActivity implements BirthdateInte
             lastnameLayout = (LinearLayout) findViewById(R.id.lastnameLayout);
             firstnameNextButton.setVisibility(View.GONE);
             firstnameTextInputLayout.setErrorEnabled(false);
-            firstNameEditText.setEnabled(false);
+            //firstNameEditText.setEnabled(false);
             lastnameLayout.setVisibility(View.VISIBLE);
 
             scrollView.post(new Runnable() {
@@ -772,7 +804,7 @@ public class RegisterActivity extends AppCompatActivity implements BirthdateInte
             user.setLastName(lastnameEditText.getText().toString());
             phonenumLayout = (LinearLayout) findViewById(R.id.phonenumLayout);
             lastnameNextButton.setVisibility(View.GONE);
-            lastnameEditText.setEnabled(false);
+            //lastnameEditText.setEnabled(false);
             lastnameTextInputLayout.setErrorEnabled(false);
             phonenumLayout.setVisibility(View.VISIBLE);
 
@@ -780,8 +812,9 @@ public class RegisterActivity extends AppCompatActivity implements BirthdateInte
 
                 @Override
                 public void run() {
+
                     scrollView.fullScroll(ScrollView.FOCUS_DOWN);
-                    phoneInputView.requestFocus();
+
                 }
             });
 
@@ -806,7 +839,7 @@ public class RegisterActivity extends AppCompatActivity implements BirthdateInte
             user.setPhoneNumber(phoneInputView.getNumber());
             homeNumberLayout = (LinearLayout) findViewById(R.id.homePhoneNumberLayout);
             phoneNumberNextButton.setVisibility(View.GONE);
-            phoneInputView.setEnabled(false);
+            //phoneInputView.setEnabled(false);
             homeNumberLayout.setVisibility(View.VISIBLE);
 
             scrollView.post(new Runnable() {
@@ -821,43 +854,38 @@ public class RegisterActivity extends AppCompatActivity implements BirthdateInte
         }
     }
 
-    /*     re pass
-           home address
-        */
+
     // show Birthdate Layout
     private void showBirthdateLayout(){
 
         homeNumberTextInputLayout = (TextInputLayout) findViewById(R.id.homePhoneNumberTextInputLayout);
 
-        if(Validator.isPhoneNumber(homeNumberEditText)){
-
-
-            // add to user
-            user.setHomeNumber(homeNumberEditText.getText().toString());
-
-            homeNumberTextInputLayout.setErrorEnabled(false);
-            birthdateLayout = (LinearLayout) findViewById(R.id.birthdateLayout);
 
 
 
-            homeNumberNextButton.setVisibility(View.GONE);
-            homeNumberEditText.setEnabled(false);
-            birthdateEditText.setEnabled(false);
-            birthdateLayout.setVisibility(View.VISIBLE);
+        // add to user
+        user.setHomeNumber(homeNumberEditText.getText().toString());
 
-            scrollView.post(new Runnable() {
+        homeNumberTextInputLayout.setErrorEnabled(false);
+        birthdateLayout = (LinearLayout) findViewById(R.id.birthdateLayout);
 
-                @Override
-                public void run() {
-                    scrollView.fullScroll(ScrollView.FOCUS_DOWN);
-                    birthdateEditText.requestFocus();
-                }
-            });
 
-        }else{
 
-            homeNumberTextInputLayout.setError(getResources().getString(R.string.invalid_home_number));
-        }
+        homeNumberNextButton.setVisibility(View.GONE);
+        //homeNumberEditText.setEnabled(false);
+        birthdateEditText.setEnabled(false);
+        birthdateLayout.setVisibility(View.VISIBLE);
+
+        scrollView.post(new Runnable() {
+
+            @Override
+            public void run() {
+                scrollView.fullScroll(ScrollView.FOCUS_DOWN);
+                birthdateEditText.requestFocus();
+            }
+        });
+
+
 
     }
 
@@ -867,13 +895,14 @@ public class RegisterActivity extends AppCompatActivity implements BirthdateInte
         birthdateTextInputLayout = (TextInputLayout) findViewById(R.id.birthdateTextInputLayout);
         genderLayout = (LinearLayout) findViewById(R.id.genderLayout);
 
-        if(Validator.isNotEmpty(birthdateEditText)){
+        if(Validator.isNotEmpty(birthdateEditText)&&Validator.isBirthdate(birthdate)){
+
 
             user.setBirthday(new java.sql.Date(birthdate.getTimeInMillis()));
             birthdateTextInputLayout.setErrorEnabled(false);
             birthdateNextButton.setVisibility(View.GONE);
             genderLayout.setVisibility(View.VISIBLE);
-            birthdateEditText.setEnabled(false);
+            birthdateEditText.setEnabled(true);
 
             scrollView.post(new Runnable() {
 
@@ -905,14 +934,14 @@ public class RegisterActivity extends AppCompatActivity implements BirthdateInte
 
 
 
-            scrollView.post(new Runnable() {
+        scrollView.post(new Runnable() {
 
-                @Override
-                public void run() {
-                    scrollView.fullScroll(ScrollView.FOCUS_DOWN);
-                    emailEditText.requestFocus();
-                }
-            });
+            @Override
+            public void run() {
+                scrollView.fullScroll(ScrollView.FOCUS_DOWN);
+                emailEditText.requestFocus();
+            }
+        });
 
 
 
@@ -936,7 +965,7 @@ public class RegisterActivity extends AppCompatActivity implements BirthdateInte
             user.setEmail(emailEditText.getText().toString());
 
             passwordLayout = (LinearLayout) findViewById(R.id.passwordLayout);
-            emailEditText.setEnabled(false);
+            // emailEditText.setEnabled(false);
             emailNextButton.setVisibility(View.GONE);
             passwordLayout.setVisibility(View.VISIBLE);
 
@@ -998,7 +1027,7 @@ public class RegisterActivity extends AppCompatActivity implements BirthdateInte
 
         passwordConfirmTextInputLayout = (TextInputLayout) findViewById(R.id.passwordConfirmTextInputLayout);
 
-        if(Validator.isMatchPassword(passwordEditText,passwordConfrimationEditText)){
+        if(Validator.isMatchPassword(passwordEditText, passwordConfrimationEditText)){
 
 
             user.setPassword(passwordConfrimationEditText.getText().toString());
@@ -1029,63 +1058,221 @@ public class RegisterActivity extends AppCompatActivity implements BirthdateInte
             passwordConfirmTextInputLayout.setError(getResources().getString(R.string.passwords_not_matched));
         }
     }
+
+    /**
+     * this method used to perform reg
+     */
     private void register(){
 
-        user.setCountry(country);
-        user.setCity(city);
-        user.setAddress(address);
-        user.setLatitude(homeLatitude);
-        user.setLongitude(homeLongitude);
-//        user.setLastName("Atef");
-//        user.setImageUrl("///");
-//        user.setPassword("123");
-//        user.setBirthday(new java.sql.Date(1993, 01, 15));
-//        user.setPhoneNumber("12323333");
-//        user.setHomeNumber("2222");
-//        user.setEmail("a@a.com");
-//        user.setUserId(1);
-        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
-       // String url="http://"+Urls.IP_ADDRESS+":"+Urls.PORT_NUMBER+"/WebService/service/regist/"+gson.toJson(user);
 
-        // JUST TRY THE WEB SERVICE
-        final RequestQueue queue = MySingleton.getInstance(getApplicationContext()).getRequestQueue();
-
-        HashMap<String,String> headers = new HashMap<>();
-       // Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
-       //headers.put("Content-Type","application/json");
-        headers.put("data",gson.toJson(user));
-        Log.i("Json obj",gson.toJson(user));
+        registerProgressDialog = ProgressDialog.show(this,getResources().getString(R.string.registering),getResources().getString(R.string.please_wait),false,false);
 
 
-        //GsonRequest
-        GsonRequest<Status> gsonRequest = new GsonRequest<>(Urls.WEB_SERVICE_REGISTER_URL, Request.Method.POST,
-                Status.class, headers,
-                // On Success Registeration process
-                new Response.Listener<Status>() {
-                    @Override
-                    public void onResponse(Status response) {
 
-                        Log.i("regist",String.valueOf(response.getStatus()));
+
+        //check validated address
+        if(Validator.isNotEmptyString(country)&&Validator.isNotEmptyString(city)&&Validator.isNotEmptyString(address)){
+
+            user.setCountry(country);
+            user.setCity(city);
+            user.setAddress(address);
+            user.setLatitude(homeLatitude);
+            user.setLongitude(homeLongitude);
+
+            Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+
+
+            // JUST TRY THE WEB SERVICE
+            queue = MySingleton.getInstance(getApplicationContext()).getRequestQueue();
+
+            HashMap<String,String> headers = new HashMap<>();
+            headers.put("data", gson.toJson(user));
+
+
+
+            //GsonRequest
+            GsonRequest<Status> gsonRequest = new GsonRequest<>(Urls.WEB_SERVICE_REGISTER_URL, Request.Method.POST,
+                    Status.class, headers,
+                    // On Success Registeration process
+                    new Response.Listener<Status>() {
+                        @Override
+                        public void onResponse(Status response) {
+
+
+
+
+                            // Successful registeration
+                            if(response.getStatus()==1){
+
+                                // to upload image
+                                if(imagePath!=null){
+
+
+                                    uploadPicture();
+
+                                }else{
+
+                                    login();
+                                }
+                            }
+                            // failed to register
+                            else{
+                                registerProgressDialog.dismiss();
+                                Toast.makeText(getApplicationContext(),getResources().getString(R.string.email_already_exist),Toast.LENGTH_LONG).show();
+                            }
+
+
+
+
+                        }
+                    },
+                    // On failed Registeration process
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+
+                            // Dismiss the progress dialog
+                            registerProgressDialog.dismiss();
+                            // show the toast of failure
+                            Toast.makeText(getApplicationContext(),getResources().getString(R.string.register_failed),Toast.LENGTH_LONG).show();
+
+                        }
                     }
-                },
-                // On failed Registeration process
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
+            );
+            // end of request
 
-                        Log.i("regist",error.toString());
-                    }
+
+
+
+            // add request to the queue ..
+            queue.add(gsonRequest);
+
+        }else{
+
+            registerProgressDialog.dismiss();
+            Toast.makeText(this,getResources().getString(R.string.location_required),Toast.LENGTH_LONG).show();
+
+        }
+
+
+
+
+
+    }
+
+    /**
+     * This method used to upload image to server
+     */
+    private void uploadPicture() {
+
+        // final ProgressDialog loading = ProgressDialog.show(this, "Uploading...", "Please wait...", false, false);
+        Ion.with(getApplicationContext())
+                .load(Urls.IMAGE_UPLOAD_URL).setLogging("UPLOAD LOGS", Log.DEBUG)
+                .setMultipartParameter("email", user.getEmail())
+                .setMultipartFile("file", "application/zip", new File(imagePath)).asJsonObject().setCallback(new FutureCallback<JsonObject>() {
+            @Override
+            public void onCompleted(Exception e, JsonObject result) {
+                if (e != null) {
+                    e.printStackTrace();
                 }
-        );
-        // end of request
+
+                Log.i("completed", "completed");
+                //Login called here
+                registerProgressDialog.dismiss();
+                // here we are login
+                login();
+
+                if (result != null) {
+
+                    Log.i("success", result.get("message").getAsString());
 
 
 
-
-        // add request to the queue ..
-        queue.add(gsonRequest);
+                }
+            }
+        });
     }
 
 
+
+    /**
+     * to get the Real Path of uri
+     * @param contentURI
+     * @return
+     */
+    private String getRealPathFromURI(Uri contentURI) {
+        String result;
+        Cursor cursor = getContentResolver().query(contentURI, null, null, null, null);
+        if (cursor == null) { // Source is Dropbox or other similar local file path
+            result = contentURI.getPath();
+        } else {
+            cursor.moveToFirst();
+            int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+            result = cursor.getString(idx);
+            cursor.close();
+        }
+        return result;
+    }
+
+    /**
+     * this method used to perform login
+     */
+    private void login(){
+
+        Log.i("validation method ", "I am in the validation method :D ");
+
+
+
+        HashMap<String,String> headers = new HashMap<>();
+        headers.put("email",user.getEmail());
+        headers.put("password",user.getPassword());
+
+
+
+        GsonRequest gsonRequest = new GsonRequest(Urls.WEB_SERVICE_lOGIN_URL, Request.Method.POST, Status.class, headers, new Response.Listener<Status>() {
+            @Override
+            public void onResponse(Status response) {
+
+                // in case of success login
+                if (response.getStatus() == 1){
+                    user = response.getUser();
+                    Log.i("user first name ", user.getFirstName());
+
+                    SharedPreferenceManager.saveUser(getApplicationContext(), user);
+
+                    // go to home Activity .. based on type
+                    // 1 indicates to patient
+                    if(user.getType() == 1){
+                        Log.i("in optionsActivity",String.valueOf(user.getType()));
+                        Intent patientIntent = new Intent(getApplicationContext(),PatientHomeActivity.class);
+                        startActivity(patientIntent);
+                    }
+                    else{
+
+                        Intent relativeIntent = new Intent(getApplicationContext(),RelativeHomeActivity.class);
+                        startActivity(relativeIntent);
+                    }
+
+                }
+                //in case of login failed
+                else{
+                    Toast.makeText(getApplicationContext(),getResources().getString(R.string.login_failed),Toast.LENGTH_SHORT).show();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+                Log.i("***error***",error.toString());
+                VolleyLog.d("my error*******", "Error: " + error.getMessage());
+            }
+        });
+
+
+        queue.add(gsonRequest);
+
+
+
+    }// end of ValidateAndLogin method
 
 }

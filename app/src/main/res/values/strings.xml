@@ -30,6 +30,9 @@
     <string name="register">Register</string>
     <string name="gps_not_available">Error: GPS service is not available</string>
     <string name="login_failed">Login Failed</string>
+    <string name="no_internt_msg">There is no internet connection</string>
+    <string name="email_already_exist">Email already exist</string>
+    <string name="location_required">Your location is required</string>
 
     <string-array name="gender">
         <item>Male</item>
@@ -40,4 +43,117 @@
         <item>Patient</item>
         <item>Relative</item>
     </string-array>
+
+    <!--    add patient code  -->
+
+    <string name="no_result">No results where found</string>
+    <string name="wait">Waiting..</string>
+    <string name="title_activity_main2">Send request</string>
+    <string name="title_activity_main3">requests</string>
+    <string name="title">Title</string>
+    <string name="description">Description</string>
+    <string name="wife">wife</string>
+    <string name="Aunt_father_side">Aunt (father side)</string>
+    <string name="Aunt_Mother_side">Aunt (Mother side)</string>
+    <string name="Brother">Brother</string>
+    <string name="Brother_in_law">Brother-in-law</string>
+    <string name="Cousin_female_Mother_side">Cousin (female) - (Mother side)</string>
+    <string name="Cousin_female_Father_side">Cousin (female)- (Father side)</string>
+    <string name="Cousin_male_Father_side">Cousin (male) -(Father side)</string>
+    <string name="Cousin_male_Mother_side">Cousin (male) -(Mother side)</string>
+    <string name="Daughter">Daughter</string>
+    <string name="Daughter_in_law">Daughter-in-law</string>
+    <string name="Father_in_law">Father-in-law</string>
+    <string name="Grandchildren">Grandchildren</string>
+    <string name="Granddaughter">Granddaughter</string>
+    <string name="Grandfather">Grandfather</string>
+    <string name="Grandmother">Grandmother</string>
+    <string name="Grandson">Grandson</string>
+    <string name="Father">Father</string>
+    <string name="Half_brother">Half-brother</string>
+    <string name="Husband">Husband</string>
+    <string name="Half_sister">Half-sister</string>
+    <string name="Mother">Mother</string>
+    <string name="Mother_in_law">Mother-in-law</string>
+    <string name="Nephew_brother_son">Nephew (brother\'s son)</string>
+    <string name="Nephew_sister_son">Nephew (sister\'s son)</string>
+    <string name="Niece_brother_daughter">Niece (brother\'s daughter)</string>
+    <string name="Niece_sister_daughter">Niece (sister\'s daughter)</string>
+    <string name="Sister">Sister</string>
+    <string name="Siter_in_law">Siter-in-law</string>
+    <string name="Son">Son</string>
+    <string name="Son_in_law">Son-in-law</string>
+    <string name="Stepbrother">Stepbrother</string>
+    <string name="Stepdaughter">Stepdaughter</string>
+    <string name="Stepfather">Stepfather</string>
+    <string name="Stepmother">Stepmother</string>
+    <string name="Stepsister">Stepsister</string>
+    <string name="Stepson">Stepson</string>
+    <string name="Uncle_Father_side">Uncle (Father side)</string>
+    <string name="Uncle_Mother_side">Uncle (Mother side)</string>
+    <string name="hintPatientEmail">Patient Email</string>
+    <string name="search">Search</string>
+    <string name="thumbnail">thumbnail</string>
+    <string name="patientEmail">Email</string>
+    <string name="relation">Relations</string>
+    <string name="send">Send</string>
+    <string name="requestSend">request has been sent</string>
+
+    <!-- patient home array-->
+    <string-array name="patient_home_arr">
+        <item>Profile</item>
+        <item>Requests</item>
+        <item>Relatives</item>
+        <item>Home</item>
+        <item>Memories</item>
+        <item>Settings</item>
+        <item>Panic</item>
+    </string-array>
+
+    <!-- patient home array-->
+    <string-array name="relative_home_arr">
+        <item>Profile</item>
+        <item>Find Patients</item>
+        <item>Patients</item>
+    </string-array>
+    <!-- patient list -->
+    <string name="Memory">Matual Memories</string>
+    <string name="Location">Location</string>
+    <string name="RemovedSuccessfully">Removed Successfully</string>
+    <string name="FailedRemoved">Failed to remove this patient</string>
+    <string name="NoConnection">No Connection</string>
+    <!--Delete patient Dialog-->
+    <string name="deleteMessage">Are you sure,You want to delete this patient?</string>
+    <string name="Ok">Ok</string>
+    <string name="Cancel">Cancel</string>
+    <string name="register_failed">Register Failed</string>
+    <string name="getting_location">Getting Location</string>
+    <string name="please_wait">Please Wait ..</string>
+    <string name="registering">Registering</string>
+
+    <!-- Relative activity array-->
+    <string-array name="relative_activity_arr">
+        <item>Call</item>
+        <item>SMS</item>
+        <item>Memories</item>
+        <item>Panic</item>
+    </string-array>
+
+
+
+
+
+    <!-- profile relative activity -->
+    <string name="yourphone">Your phone</string>
+    <string name="yourName">Your Name</string>
+    <string name="yourcountry">yourcountry</string>
+    <string name="yourcity">yourcity</string>
+    <string name="youraddress">youraddress</string>
+    <string name="title_activity_patient_profile">PatientProfileActivity</string>
+
+
+    <!-- home activity -->
+    <string name="title_activity_maps">Map</string>
+    <string name="maplLabel">Home</string>
+
 </resources>

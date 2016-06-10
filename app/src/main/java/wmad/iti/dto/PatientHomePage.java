@@ -6,6 +6,7 @@ import android.content.res.Resources;
 import java.util.ArrayList;
 import java.util.List;
 
+import wmad.iti.irememeber.PatientHomeActivity;
 import wmad.iti.irememeber.R;
 
 /**
@@ -46,10 +47,8 @@ public class PatientHomePage{
                 R.drawable.panic_mode
         };
 
-         String [] iconsTitle ={"Profile","Requests","Relatives","Home","Memories","Settings","Panic"};
-
-
-
+      //  String [] iconsTitle ={"Profile","Requests","Relatives","Home","Memories","Settings","Panic"};
+        String[] iconsTitle=  PatientHomeActivity.instance().getResources().getStringArray(R.array.patient_home_arr);
 
                 for(int i = 0 ; i< images.length;i++)
                 {
@@ -57,6 +56,7 @@ public class PatientHomePage{
                     patientHomePage.setTitle(iconsTitle[i]);
                     patientHomePage.setImageID(images[i]);
                     data.add(patientHomePage);
+
                 }
 
         return data;

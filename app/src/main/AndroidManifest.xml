@@ -2,14 +2,20 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="wmad.iti.irememeber">
 
-    <uses-feature android:name="android.hardware.camera"
+    <uses-feature
+        android:name="android.hardware.camera"
         android:required="true" />
+    <uses-permission android:name="android.permission.WRITE_SMS" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.SEND_SMS" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-
-
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
 
     <application
         android:allowBackup="true"
@@ -28,27 +34,47 @@
         </activity>
         <activity
             android:name=".OptionsActivity"
-            android:theme="@style/OptionsLoad"></activity>
-
-        <activity android:name=".RegisterActivity"
-            ></activity>
+            android:theme="@style/OptionsLoad" />
+        <activity android:name=".RegisterActivity" />
         <activity
             android:name=".PatientHomeActivity"
-            android:theme="@style/Hometheme">
-
-        </activity>
-        <activity android:name=".RelativeHomeActivity">
-        </activity>
+            android:theme="@style/Hometheme" />
+        <activity android:name=".RelativeHomeActivity" />
+        <activity
+            android:name="wmad.iti.requests.SendRequest"
+            android:label="@string/title_activity_main2"
+            android:theme="@style/MaterialTheme" />
+        <activity
+            android:name="wmad.iti.requests.ShowRequestPatient"
+            android:label="@string/title_activity_main3"
+            android:theme="@style/MaterialTheme" />
+        <activity android:name="wmad.iti.patentlist.PatientHome"
+            android:theme="@style/MaterialTheme"/>
+        <activity android:name="wmad.iti.patentlist.PatientActivity"
+            android:theme="@style/MaterialTheme" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyCvStzDK_pkyQhMGf-V9ouu1lfDiT7oxU4"/>
-
+            android:value="AIzaSyCvStzDK_pkyQhMGf-V9ouu1lfDiT7oxU4" />
         <meta-data
-
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
+        <activity android:name="wmad.iti.relativelist.RelativesListHome"
+            android:theme="@style/MaterialTheme"/>
+
+        <activity android:name="wmad.iti.relativelist.RelativeActivity"
+            android:theme="@style/MaterialTheme">
+        </activity>
+
+        <activity
+            android:name="wmad.iti.personalprofile.RlativeProfileActivity"
+            android:label="@string/app_name"
+            android:theme="@style/MaterialTheme"></activity>
+        <activity
+            android:name="wmad.iti.personalprofile.PatientProfileActivity"
+            android:label="@string/title_activity_patient_profile"
+            android:theme="@style/MaterialTheme"></activity>
 
 
     </application>

@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:id="@+id/main"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        >
+
+        <include
+            android:id="@+id/toolbar"
+            layout="@layout/toolbar"/>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/scrollView"
+            android:layout_alignParentTop="true"
+            android:scrollbars="none">
+
+
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingBottom="@dimen/activity_vertical_margin"
+                android:paddingTop="@dimen/activity_vertical_margin">
+
+                <!--first layout for picture-->
+
+                <FrameLayout
+                    android:weightSum="10"
+
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:layout_marginTop="30dp"
+                    >
+
+                    <!--circle view for preview profile picture-->
+                    <com.mikhaellopez.circularimageview.CircularImageView
+
+                        android:layout_width="180dp"
+                        android:layout_height="180dp"
+                        android:src="@drawable/default_profle"
+                        android:id="@+id/profile_circularImageView"
+                        app:civ_border_color="#EEEEEE"
+                        app:civ_border_width="4dp"
+                        app:civ_shadow="true"
+                        app:civ_shadow_radius="10"
+                        app:civ_shadow_color="#9C27B0"
+                        android:layout_gravity="center"/>
+
+                    <android.support.design.widget.FloatingActionButton
+                        android:layout_width="95dp"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/changeImgFloatingActionButton"
+                        android:src="@drawable/ic_camera"
+                        android:layout_gravity="right|bottom"
+                        app:backgroundTint="#9C27B0"
+                        app:fabSize="normal"
+                        android:layout_marginRight="@dimen/float_margin"
+                        android:layout_marginBottom="16dp"
+                        />
+
+                </FrameLayout>
+
+                <!-- layout  Name-->
+                <LinearLayout
+
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:visibility="visible"
+                    android:layout_marginTop="20dp"
+                    android:id="@+id/firstnameLayout">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="38dp"
+                        android:hint="@string/yourName"
+                        android:gravity="center"
+                        android:textColorHint="@color/colorPrimary"
+                        android:background="@drawable/textview_border"
+                        android:id="@+id/firsttext"
+                        android:drawableRight="@drawable/pencil"
+                        android:textColorHighlight="#ffffff"/>
+
+
+                </LinearLayout>
+
+
+
+
+
+                <!-- layout  phonenum-->
+                <LinearLayout
+
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:visibility="visible"
+
+                    android:id="@+id/phonenumLayout">
+
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="38dp"
+                        android:hint="@string/yourphone"
+                        android:gravity="center"
+                        android:textColorHint="@color/colorPrimary"
+                        android:background="@drawable/textview_border"
+                        android:id="@+id/phonetext"
+                        android:drawableRight="@drawable/pencil"
+                        android:textColorHighlight="#ffffff"/>
+
+                </LinearLayout>
+
+
+
+                <!-- layout  country-->
+                <LinearLayout
+
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:visibility="visible"
+
+                    android:id="@+id/countryLayout">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="38dp"
+                        android:hint="@string/yourcountry"
+                        android:gravity="center"
+                        android:textColorHint="@color/colorPrimary"
+                        android:background="@drawable/textview_border"
+                        android:id="@+id/countrytext"
+                        android:drawableRight="@drawable/pencil"
+                        android:textColorHighlight="#ffffff"/>
+
+
+                </LinearLayout>
+
+
+                <!-- layout  city-->
+                <LinearLayout
+
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:visibility="visible"
+
+                    android:id="@+id/cityLayout">
+
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="38dp"
+                        android:hint="@string/yourcity"
+                        android:gravity="center"
+                        android:textColorHint="@color/colorPrimary"
+                        android:background="@drawable/textview_border"
+                        android:id="@+id/citytext"
+                        android:drawableRight="@drawable/pencil"
+                        android:textColorHighlight="#ffffff"/>
+
+                </LinearLayout>
+
+
+                <!-- layout  address-->
+                <LinearLayout
+
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:visibility="visible"
+
+                    android:id="@+id/addressLayout">
+
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="38dp"
+                        android:hint="@string/youraddress"
+                        android:gravity="center"
+                        android:textColorHint="@color/colorPrimary"
+                        android:background="@drawable/textview_border"
+                        android:id="@+id/addresstext"
+                        android:drawableRight="@drawable/pencil"
+                        android:textColorHighlight="#ffffff"/>
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+        </ScrollView>
+    </RelativeLayout>
+
+

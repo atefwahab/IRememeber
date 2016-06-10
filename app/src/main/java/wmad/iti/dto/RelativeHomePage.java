@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import wmad.iti.irememeber.R;
+import wmad.iti.irememeber.RelativeHomeActivity;
 
 /**
  * Created by Nihal on 16/05/2016.
@@ -42,7 +43,7 @@ public class RelativeHomePage {
 
         };
 
-        String [] relativeIconsTitle ={"Profile","Find Patients","Patients"};
+        String [] relativeIconsTitle =  RelativeHomeActivity.instance().getResources().getStringArray(R.array.relative_home_arr);
 
         for(int i = 0 ; i< relativeImages.length;i++)
         {

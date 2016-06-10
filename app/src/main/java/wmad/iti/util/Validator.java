@@ -1,6 +1,10 @@
 package wmad.iti.util;
 
+import android.util.Log;
 import android.widget.EditText;
+
+import java.util.Calendar;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by atef on 5/16/2016.
@@ -25,6 +29,11 @@ public class Validator {
         return flag;
     }
 
+    /**
+     * this method used to make sure an EditText is empty
+     * @param editText
+     * @return
+     */
     public static boolean isEmpty(EditText editText) {
 
         boolean flag = false;
@@ -39,7 +48,7 @@ public class Validator {
     public static boolean isNotEmptyString(String str) {
         boolean flag = true;
 
-        if (str.equals("")) {
+        if (str.equals("")||str==null) {
             flag = false;
         }
 
@@ -135,5 +144,28 @@ public class Validator {
     }
 
 
+    /**
+     * this method used to make sure date is before today
+     * @param birthdate
+     * @return
+     */
+    public static boolean isBirthdate(Calendar birthdate){
+
+        boolean flag = true;
+
+
+
+        Calendar today =  Calendar.getInstance();
+
+
+        //CHECK IF DIFFERENCE IS 6 YEARS
+        if(today.get(Calendar.YEAR)-birthdate.get(Calendar.YEAR)<6){
+
+            flag=false;
+        }
+
+        return flag;
+
+    }
 
 }

@@ -10,15 +10,23 @@ import android.view.View;
 import wmad.iti.adapter.MyLisnterInt;
 import wmad.iti.adapter.RelativeRecyclerAdapter;
 import wmad.iti.dto.RelativeHomePage;
+import wmad.iti.patentlist.PatientHome;
+import wmad.iti.requests.SendRequest;
+import wmad.iti.personalprofile.RlativeProfileActivity;
 
 public class RelativeHomeActivity extends AppCompatActivity implements MyLisnterInt{
 
     RecyclerView recyclerView;
+    static RelativeHomeActivity inst;
+    static public RelativeHomeActivity instance(){
+        return inst;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_relative_home);
+        inst=this;
         setUpRecyclerView();
     }
 
@@ -45,16 +53,16 @@ public class RelativeHomeActivity extends AppCompatActivity implements MyLisnter
     @Override
     public void goToRelativeActivities(View v, int position) {
         switch (position) {
-            case 0:
-                Intent profileIntent = new Intent(this, OptionsActivity.class);
+            case 0: //relative profile activity
+                Intent profileIntent = new Intent(this,RlativeProfileActivity.class);
                 startActivity(profileIntent);
                 break;
-            case 1:
-                Intent AddPatientIntent = new Intent(this, OptionsActivity.class);
+            case 1: //add patient activity
+                Intent AddPatientIntent = new Intent(this, SendRequest.class);
                 startActivity(AddPatientIntent);
                 break;
-            case 2:
-                Intent PatientsIntent = new Intent(this, OptionsActivity.class);
+            case 2: //patients activity
+                Intent PatientsIntent = new Intent(this, PatientHome.class);
                 startActivity(PatientsIntent);
                 break;
         }

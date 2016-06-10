@@ -13,6 +13,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import wmad.iti.dto.PatientHomePage;
+import wmad.iti.irememeber.PatientHomeActivity;
 import wmad.iti.irememeber.R;
 
 /**
@@ -84,9 +85,12 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
         public void setData(PatientHomePage current) {
             this.title.setText(current.getTitle());
             this.iconImage.setImageResource(current.getImageID());
-        }
-    }
+            if(current.getImageID()==R.drawable.recieve_request){
 
+                PatientHomeActivity.instance().updateNotifcationNum(iconImage);
+                }//end of if
+        }//end of setDatamethod
 
-}
+}//end of inner class
+}//end of class
 
