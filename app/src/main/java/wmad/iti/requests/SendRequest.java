@@ -18,6 +18,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -97,6 +98,16 @@ public class SendRequest extends AppCompatActivity {
         relationTextView=(TextView)findViewById(R.id.relationTextView);
 
         context=getBaseContext();
+
+        patientEmail.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                showSoftKeyboard(v);
+                return false;
+            }
+        });
+
+
 
         /*
         * the data of spinner relation
@@ -398,6 +409,7 @@ public class SendRequest extends AppCompatActivity {
                                             emails.add(email);
                                             images.add(imageUrl);
                                             list.setAdapter(new CustomAdapterSearchList(context, fnames, emails, images));
+                                            hideSoftKeyboard();
                                         }
 
                                     }else{
@@ -442,6 +454,25 @@ public class SendRequest extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+    }
+
+    /**
+     * Hides the soft keyboard
+     */
+    public void hideSoftKeyboard() {
+        if(getCurrentFocus()!=null) {
+            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+        }
+    }
+
+    /**
+     * Shows the soft keyboard
+     */
+    public void showSoftKeyboard(View view) {
+        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        view.requestFocus();
+        inputMethodManager.showSoftInput(view, 0);
     }
 
 }
