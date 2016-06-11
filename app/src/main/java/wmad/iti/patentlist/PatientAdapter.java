@@ -137,12 +137,6 @@ public class PatientAdapter extends RecyclerView.Adapter<PatientAdapter.ViewHold
 
     }
 
-    public String getPatientFirstName(){
-        return user.getFirstName();
-    }
-    public String getPatientLastName(){
-        return user.getLastName();
-    }
 
 
     /**
@@ -219,7 +213,8 @@ public class PatientAdapter extends RecyclerView.Adapter<PatientAdapter.ViewHold
         public SimpleDraweeView patientImage;
         int position;
         User user;
-
+        //equal array list of user with array list contain users
+        ArrayList <User> patientUser= (ArrayList<User>) users;
         public ViewHolder(View itemView) {
             super(itemView);
             context = itemView.getContext();
@@ -231,13 +226,12 @@ public class PatientAdapter extends RecyclerView.Adapter<PatientAdapter.ViewHold
             patientName.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    position = getAdapterPosition();
+                    Log.i("position i", String.valueOf(position));
 
                     Intent intent = new Intent(context, PatientActivity.class);
-                    String patientFirstName=getPatientFirstName();
-                    String patientLastName=getPatientLastName();
-
-                    intent.putExtra("patientFirstName",patientFirstName);
-                    intent.putExtra("patientLastName",patientLastName);
+                    intent.putExtra("patientFirstName", patientUser.get(position).getFirstName());
+                    intent.putExtra("patientLastName",patientUser.get(position).getLastName());
                     context.startActivity(intent);
 
                 }

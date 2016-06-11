@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".SendRequest">
+    tools:context="wmad.iti.requests.SendRequest">
     <include
         android:id="@+id/toolbar"
         layout="@layout/toolbar"/>
@@ -49,7 +49,7 @@
     <TextView
         android:layout_width="350dp"
         android:layout_height="50dp"
-        android:layout_marginTop="260dp"
+        android:layout_marginTop="280dp"
         android:text="@string/relation"
         android:id="@+id/relationTextView"
         android:layout_marginLeft="15dp"
@@ -60,12 +60,15 @@
 <Spinner
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="300dp"
+    android:layout_marginTop="320dp"
     android:id="@+id/spinnerRelation"
     android:layout_marginLeft="15dp"
     android:layout_marginRight="15dp"
     android:visibility="gone"
-    ></Spinner>
+    >
+
+
+</Spinner>
 
 
 <Button
@@ -75,7 +78,7 @@
     android:textSize="20dp"
     android:background="@color/colorPrimary"
     android:textColor="@color/colorButtonText"
-    android:layout_marginTop="380dp"
+    android:layout_marginTop="400dp"
     android:layout_marginLeft="250dp"
     android:layout_gravity="right"
     android:id="@+id/done"

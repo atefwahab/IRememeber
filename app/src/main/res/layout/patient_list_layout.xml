@@ -21,6 +21,7 @@
             android:id="@+id/patien_image"
             android:layout_width="60dp"
             android:layout_height="60dp"
+            android:layout_margin="5dp"
             fresco:placeholderImage="@drawable/patien_img"
             />
         <LinearLayout

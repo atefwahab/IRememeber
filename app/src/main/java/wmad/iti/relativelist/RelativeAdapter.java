@@ -102,17 +102,6 @@ public class RelativeAdapter extends RecyclerView.Adapter<RelativeAdapter.ViewHo
 
         }
     }
-    /**
-     * This method is used to get phone number of relative
-     * @return String
-     */
-    public String getPhoneNumber(){
-        return user.getPhoneNumber();
-    }
-
-    public String getRelativeFirstName(){return user.getFirstName();}
-    public String getRelativeLastName(){return user.getLastName();}
-
 
     @Override
     public int getItemCount() {
@@ -127,7 +116,9 @@ public class RelativeAdapter extends RecyclerView.Adapter<RelativeAdapter.ViewHo
 
         public TextView relativeName;
         public SimpleDraweeView relativeImage;
-        User user;
+        //equal array list of user with array list contain users
+        ArrayList <User> user= (ArrayList<User>) users;
+        int position;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -140,19 +131,14 @@ public class RelativeAdapter extends RecyclerView.Adapter<RelativeAdapter.ViewHo
             relativeName.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
-                    int position = getAdapterPosition();
+                    position = getAdapterPosition();
+                    Log.i("position i", String.valueOf(position));
 
                     Intent intent = new Intent(context,RelativeActivity.class);
-                    String phone=getPhoneNumber();
-                    String relativeFirstName=getRelativeFirstName();
-                    String relativeLastName=getRelativeLastName();
-
-                    intent.putExtra("phoneNumber",phone);
-                    intent.putExtra("relativeFirstName", relativeFirstName);
-                    intent.putExtra("relativeLastName",relativeLastName);
+                    intent.putExtra("phoneNumber",user.get(position).getPhoneNumber());
+                    intent.putExtra("relativeFirstName",user.get(position).getFirstName());
+                    intent.putExtra("relativeLastName",user.get(position).getLastName());
                     context.startActivity(intent);
-
                 }
             });
         }//end of constructor

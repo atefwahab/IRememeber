@@ -48,7 +48,7 @@
 
     <string name="no_result">No results where found</string>
     <string name="wait">Waiting..</string>
-    <string name="title_activity_main2">Send request</string>
+    <string name="title_activity_main2">Add patient</string>
     <string name="title_activity_main3">requests</string>
     <string name="title">Title</string>
     <string name="description">Description</string>
