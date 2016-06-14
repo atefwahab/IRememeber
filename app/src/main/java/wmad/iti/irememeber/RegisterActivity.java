@@ -429,7 +429,7 @@ public class RegisterActivity extends AppCompatActivity implements BirthdateInte
 
                         if (photoFile.exists()) {
 
-                            Log.i("*****", "file exists");
+                         //   Log.i("*****", "file exists");
                             takePhotoIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
 
                             startActivityForResult(takePhotoIntent, REQUEST_CAMERA);
