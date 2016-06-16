@@ -1,6 +1,8 @@
 package wmad.iti.irememeber;
 
 import android.app.ProgressDialog;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.content.Intent;
 import android.support.design.widget.Snackbar;
@@ -46,6 +48,7 @@ public class OptionsActivity extends AppCompatActivity {
     RequestQueue requestQueue;
     Intent registerIntent;
     ProgressDialog progressDialog;
+    BluetoothAdapter mBluetoothAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,6 +114,7 @@ public class OptionsActivity extends AppCompatActivity {
                 passwordEditTextValue=passwordEditText.getText().toString();
                 headers.put("email",emailEditTextValue);
                 headers.put("password",passwordEditTextValue);
+                headers.put("macAddress", getMacAddress());
 
                 requestQueue = MySingleton.getInstance(getApplicationContext()).getRequestQueue();
 
@@ -181,5 +185,15 @@ public class OptionsActivity extends AppCompatActivity {
 
         registerIntent = new Intent(getApplicationContext(),RegisterActivity.class);
         startActivity(registerIntent);
+    }
+
+    public String getMacAddress() {
+        final BluetoothManager bluetoothManager =
+                (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+        mBluetoothAdapter = bluetoothManager.getAdapter();
+        String macAddress = mBluetoothAdapter.getAddress();
+        // Toast.makeText(getApplicationContext(),macAddress,Toast.LENGTH_LONG).show();
+        Log.i("getMacAddress: ", macAddress + ">> " + mBluetoothAdapter.getAddress());
+        return macAddress;
     }
 }

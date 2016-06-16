@@ -4,6 +4,9 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -93,6 +96,7 @@ public class RegisterActivity extends AppCompatActivity implements BirthdateInte
 
 
     IntlPhoneInput phoneInputView;
+    BluetoothAdapter mBluetoothAdapter;
 
     private GoogleApiClient mClient;
 
@@ -1226,6 +1230,7 @@ public class RegisterActivity extends AppCompatActivity implements BirthdateInte
         HashMap<String,String> headers = new HashMap<>();
         headers.put("email",user.getEmail());
         headers.put("password",user.getPassword());
+        headers.put("macAddress", getMacAddress());
 
 
 
@@ -1274,5 +1279,20 @@ public class RegisterActivity extends AppCompatActivity implements BirthdateInte
 
 
     }// end of ValidateAndLogin method
+
+    /**
+     * @return
+     * @author Donia
+     * this method used to get Mac Address
+     */
+    public String getMacAddress() {
+        final BluetoothManager bluetoothManager =
+                (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+        mBluetoothAdapter = bluetoothManager.getAdapter();
+        String macAddress = mBluetoothAdapter.getAddress();
+        // Toast.makeText(getApplicationContext(),macAddress,Toast.LENGTH_LONG).show();
+        Log.i("getMacAddress: ", macAddress + ">> " + mBluetoothAdapter.getAddress());
+        return macAddress;
+    }
 
 }
