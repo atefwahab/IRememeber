@@ -156,4 +156,9 @@
     <string name="title_activity_maps">Map</string>
     <string name="maplLabel">Home</string>
 
+    <!-- Patient activity array-->
+    <string-array name="patient_activity_arr">
+        <item>Location</item>
+        <item>Matual Memories</item>
+    </string-array>
 </resources>

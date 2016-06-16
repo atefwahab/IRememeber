@@ -3,6 +3,7 @@ package wmad.iti.relativelist;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.location.Address;
 import android.location.Criteria;
 import android.location.Geocoder;
@@ -20,8 +21,15 @@ import android.util.Log;
 import android.view.View;
 import android.widget.GridView;
 import android.widget.Toast;
+
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageRequest;
+import com.mikhaellopez.circularimageview.CircularImageView;
+
 import java.util.List;
 import wmad.iti.irememeber.R;
+import wmad.iti.model.MySingleton;
 
 public class RelativeActivity extends AppCompatActivity {
     GridView gridView;
@@ -34,9 +42,10 @@ public class RelativeActivity extends AppCompatActivity {
     String addreess;
     String city;
     String country;
+    String imageUrl;
     LocationManager locationManager;
     LocationListener bestLocationListener;
-
+    CircularImageView circularImageView;
     Toolbar toolbar;
     public static RelativeActivity instance() {
         return relativeActivity;
@@ -47,20 +56,23 @@ public class RelativeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         relativeActivity = this;
         setContentView(R.layout.activity_relative);
+        circularImageView= (CircularImageView) findViewById(R.id.profile_circularImageView);
 
         relativeFirstName=getIntent().getStringExtra("relativeFirstName");
         relativeLastName=getIntent().getStringExtra("relativeLastName");
+        imageUrl=getIntent().getStringExtra("imageUrl");
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(R.drawable.navigation_back);
-        getSupportActionBar().setTitle(relativeFirstName+" "+relativeLastName);
+        getSupportActionBar().setTitle(relativeFirstName + " " + relativeLastName);
 
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-        onBackPressed();
-       }});
+                onBackPressed();
+            }
+        });
 
         gridView = (GridView) findViewById(R.id.gridView1);
         iconsImages = new int[]{R.drawable.call, R.drawable.sms, R.drawable.add_memory, R.drawable.panic_mode};
@@ -68,7 +80,7 @@ public class RelativeActivity extends AppCompatActivity {
         gridView.setAdapter(new CustomRelativeActivityAdapter(this, iconTitles, iconsImages));
 
         phone = getIntent().getStringExtra("phoneNumber");
-
+        getRelativePhoto();
       //  address = getIntent().getStringExtra("Address");
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         geocoder=new Geocoder(getApplicationContext());
@@ -210,4 +222,26 @@ public void selectCriteria(){
     }
 
            }
+
+    /**
+     * This method is used to get photo of relative
+     */
+    public void getRelativePhoto(){
+
+        ImageRequest request = new ImageRequest(imageUrl,
+                new Response.Listener<Bitmap>() {
+                    @Override
+                    public void onResponse(Bitmap bitmap) {
+                        circularImageView.setImageBitmap(bitmap);
+                    }
+                }, 0, 0, null,
+                new Response.ErrorListener() {
+                    public void onErrorResponse(VolleyError error) {
+                        circularImageView.setImageResource(R.drawable.patient_img);
+                    }
+                });
+
+        MySingleton.getInstance(this).addToRequestQueue(request);
+
+    }
     }

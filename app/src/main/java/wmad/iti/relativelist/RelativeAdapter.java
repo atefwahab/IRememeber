@@ -138,6 +138,7 @@ public class RelativeAdapter extends RecyclerView.Adapter<RelativeAdapter.ViewHo
                     intent.putExtra("phoneNumber",user.get(position).getPhoneNumber());
                     intent.putExtra("relativeFirstName",user.get(position).getFirstName());
                     intent.putExtra("relativeLastName",user.get(position).getLastName());
+                    intent.putExtra("imageUrl",user.get(position).getImageUrl());
                     context.startActivity(intent);
                 }
             });

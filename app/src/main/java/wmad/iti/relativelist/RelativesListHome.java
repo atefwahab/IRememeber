@@ -121,8 +121,8 @@ public class RelativesListHome extends AppCompatActivity {
 
                    // Toast.makeText(RelativesListHome.this, "Error Response of get relatives: " + volleyError.getMessage(), Toast.LENGTH_LONG).show();
                     Log.i("onErrorResponse: ", volleyError.getMessage());
-                    ArrayList<Relative> arrRelatives =SharedPreferenceManager.getRelatives(getApplicationContext());
-                    addRelativesToList(arrRelatives);
+//                    ArrayList<Relative> arrRelatives =SharedPreferenceManager.getRelatives(getApplicationContext());
+//                    addRelativesToList(arrRelatives);
 
                 }
             });

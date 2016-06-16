@@ -232,6 +232,7 @@ public class PatientAdapter extends RecyclerView.Adapter<PatientAdapter.ViewHold
                     Intent intent = new Intent(context, PatientActivity.class);
                     intent.putExtra("patientFirstName", patientUser.get(position).getFirstName());
                     intent.putExtra("patientLastName",patientUser.get(position).getLastName());
+                    intent.putExtra("imageUrl",patientUser.get(position).getImageUrl());
                     context.startActivity(intent);
 
                 }
