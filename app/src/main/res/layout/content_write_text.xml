@@ -9,7 +9,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".WriteTextActivity"
+    tools:context="wmad.iti.memories.WriteTextActivity"
     tools:showIn="@layout/activity_write_text">
     <LinearLayout
         android:layout_width="match_parent"
@@ -32,8 +32,9 @@
             android:textColor="@color/colorPrimary"
             android:textSize="16sp"
             android:layout_marginTop="15dp"
-            android:hint=" write your memory here"
+            android:hint="@string/memoryHint"
             android:layout_weight="6"
+            android:inputType="text"
             android:textColorHint="#00bcd4"/>
         </LinearLayout>
 

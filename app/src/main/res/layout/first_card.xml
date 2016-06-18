@@ -39,7 +39,7 @@
                 android:textColor="#ffffff"
                 android:textSize="16sp"
                 android:layout_marginTop="15dp"
-                android:hint="memory"
+                android:hint="@string/memoryHint"
                 android:textColorHint="#00bcd4"/>
 
             <!--end horizontal-->
@@ -102,7 +102,7 @@
                     android:textColor="#607D8B"
                     android:textSize="15dp"
                     android:layout_marginTop="3dp"
-                    android:text="status"
+                    android:text="@string/status"
 
                     />
 
@@ -139,7 +139,7 @@
                     android:textColor="#607D8B"
                     android:textSize="15dp"
                     android:layout_marginTop="3dp"
-                    android:text="photo"
+                    android:text="@string/camera"
 
 
 
@@ -177,7 +177,7 @@
                     android:textColor="#607D8B"
                     android:textSize="15dp"
                     android:layout_marginTop="3dp"
-                    android:text="location"
+                    android:text="@string/location"
 
                     />
 
