@@ -24,6 +24,7 @@ import wmad.iti.constants.Urls;
 import wmad.iti.dto.PatientHomePage;
 import wmad.iti.dto.Relative;
 import wmad.iti.dto.User;
+import wmad.iti.memories.MemoryActivity;
 import wmad.iti.model.GsonRequest;
 import wmad.iti.model.MySingleton;
 import wmad.iti.model.SharedPreferenceManager;
@@ -105,7 +106,7 @@ public class PatientHomeActivity extends AppCompatActivity implements MyLisnterI
                 startActivity(mapIntent);
                 break;
             case 4: //add memory activity
-                Intent MemoriesIntent = new Intent(this, SplashScreen.class);
+                    Intent MemoriesIntent = new Intent(this, MemoryActivity.class);
                 startActivity(MemoriesIntent);
                 break;
             case 5: //setting activity

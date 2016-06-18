@@ -77,8 +77,13 @@
             android:name="wmad.iti.personalprofile.PatientProfileActivity"
             android:label="@string/title_activity_patient_profile"
             android:theme="@style/MaterialTheme"></activity>
-
-
+        <activity
+            android:name="wmad.iti.memories.MemoryActivity"
+            android:label="@string/app_name"
+            android:theme="@style/MaterialTheme"/>
+        <activity
+            android:name="wmad.iti.memories.WriteTextActivity"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
