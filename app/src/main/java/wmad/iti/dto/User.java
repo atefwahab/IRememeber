@@ -41,6 +41,15 @@ public class User {
     double longitude;
     double latitude;
     String imageUrl;
+    String macAddress;
+
+    public String getMacAddress() {
+        return macAddress;
+    }
+
+    public void setMacAddress(String macAddress) {
+        this.macAddress = macAddress;
+    }
 
     public int getUserId() {
         return userId;

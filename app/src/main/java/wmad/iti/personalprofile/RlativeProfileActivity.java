@@ -55,6 +55,7 @@ import wmad.iti.constants.Urls;
 import wmad.iti.dto.Status;
 import wmad.iti.dto.User;
 import wmad.iti.irememeber.R;
+import wmad.iti.irememeber.SendTokenToServerIntentService;
 import wmad.iti.model.ConnectionDetector;
 import wmad.iti.model.GsonRequest;
 import wmad.iti.model.MySingleton;
@@ -122,6 +123,12 @@ public class RlativeProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_rlative_profile);
+
+
+        /////////////////////////////////////////////////////////////////
+        Intent i = new Intent(this,SendTokenToServerIntentService.class);
+        startService(i);
+        /////////////////////////////
 
         firstName = (TextView) findViewById(R.id.firsttext);
 

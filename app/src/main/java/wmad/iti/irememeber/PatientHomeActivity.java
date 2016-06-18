@@ -50,6 +50,13 @@ public class PatientHomeActivity extends AppCompatActivity implements MyLisnterI
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_patient_home);
+
+
+        /////////////////////////////////////////////////////////////////
+        Intent i = new Intent(this,SendTokenToServerIntentService.class);
+        startService(i);
+        /////////////////////////////
+
         user=SharedPreferenceManager.getUser(getApplicationContext());
         latitude = user.getLatitude();
         Log.i("latitude", String.valueOf(latitude));

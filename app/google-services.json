@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "688873320162",
+    "firebase_url": "https://project-8363118770612634066.firebaseio.com",
+    "project_id": "project-8363118770612634066",
+    "storage_bucket": "project-8363118770612634066.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:688873320162:android:08b91a89a9548a36",
+        "android_client_info": {
+          "package_name": "wmad.iti.irememeber"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "688873320162-n31pphq9bnkteirgt9hvoi83j5g9gs7a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAaz3Y5K3rusa4abQaXygHrC2jJG2HGjsQ"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

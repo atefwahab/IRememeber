@@ -192,8 +192,8 @@ public class OptionsActivity extends AppCompatActivity {
                 (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
         mBluetoothAdapter = bluetoothManager.getAdapter();
         String macAddress = mBluetoothAdapter.getAddress();
-        // Toast.makeText(getApplicationContext(),macAddress,Toast.LENGTH_LONG).show();
-        Log.i("getMacAddress: ", macAddress + ">> " + mBluetoothAdapter.getAddress());
+         Toast.makeText(getApplicationContext(),macAddress,Toast.LENGTH_LONG).show();
+        Log.e("getMacAddress: ", macAddress + ">> " + mBluetoothAdapter.getAddress());
         return macAddress;
     }
 }

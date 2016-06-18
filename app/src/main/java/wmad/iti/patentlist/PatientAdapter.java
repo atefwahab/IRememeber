@@ -264,6 +264,10 @@ public class PatientAdapter extends RecyclerView.Adapter<PatientAdapter.ViewHold
                     intent.putExtra("patientFirstName", patientUser.get(position).getFirstName());
                     intent.putExtra("patientLastName",patientUser.get(position).getLastName());
                     intent.putExtra("imageUrl",patientUser.get(position).getImageUrl());
+                    // Atef added this code ..
+                    intent.putExtra("patientEmail",patientUser.get(position).getEmail());
+
+                    // ....................................................................
                     context.startActivity(intent);
 
                 }
