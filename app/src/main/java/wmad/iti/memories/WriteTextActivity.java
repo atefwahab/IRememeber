@@ -186,8 +186,8 @@ public class WriteTextActivity extends AppCompatActivity {
 
         Log.i("enter save memory", "memory");
         HashMap<String, String> header = new HashMap<>();
-        header.put("patientEmail","ahmed@gmail.com");
-        header.put("relativeEmail", "doaa@gmail.com");
+        header.put("patientEmail",SharedPreferenceManager.getUser(getApplicationContext()).getEmail());
+        header.put("relativeEmail", null);
         header.put("text", textEditMemory.getText().toString());
         header.put("date",currentDateandTime);
 

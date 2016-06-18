@@ -48,7 +48,6 @@ public class OptionsActivity extends AppCompatActivity {
     RequestQueue requestQueue;
     Intent registerIntent;
     ProgressDialog progressDialog;
-    BluetoothAdapter mBluetoothAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,7 +113,7 @@ public class OptionsActivity extends AppCompatActivity {
                 passwordEditTextValue=passwordEditText.getText().toString();
                 headers.put("email",emailEditTextValue);
                 headers.put("password",passwordEditTextValue);
-                headers.put("macAddress", getMacAddress());
+               // headers.put("macAddress", getMacAddress());
 
                 requestQueue = MySingleton.getInstance(getApplicationContext()).getRequestQueue();
 
@@ -159,6 +158,7 @@ public class OptionsActivity extends AppCompatActivity {
 
 
                 requestQueue.add(gsonRequest);
+
             }
             //in case of password invalid
             else{
@@ -187,13 +187,5 @@ public class OptionsActivity extends AppCompatActivity {
         startActivity(registerIntent);
     }
 
-    public String getMacAddress() {
-        final BluetoothManager bluetoothManager =
-                (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
-        mBluetoothAdapter = bluetoothManager.getAdapter();
-        String macAddress = mBluetoothAdapter.getAddress();
-         Toast.makeText(getApplicationContext(),macAddress,Toast.LENGTH_LONG).show();
-        Log.e("getMacAddress: ", macAddress + ">> " + mBluetoothAdapter.getAddress());
-        return macAddress;
-    }
+
 }

@@ -6,9 +6,9 @@ package wmad.iti.constants;
 public abstract class Urls {
     public final static String WEB_SERVICE_URL = "";
     //public final static String IP_ADDRESS = "192.168.1.3";
-    public final static String IP_ADDRESS = "192.168.1.16";
+    public final static String IP_ADDRESS = "10.0.1.25";
     public final static String PORT_NUMBER = "8084";
-    public final static String WEB_SERVICE_lOGIN_URL = "http://"+Urls.IP_ADDRESS+":"+Urls.PORT_NUMBER+"/WebService/service/login/";
+    public final static String WEB_SERVICE_lOGIN_URL = "http://"+Urls.IP_ADDRESS+":"+Urls.PORT_NUMBER+"/WebService/service/login/loginM";
     public final static String WEB_SERVICE_REGISTER_URL = "http://"+Urls.IP_ADDRESS+":"+Urls.PORT_NUMBER+"/WebService/service/regist/register";
     public final static String WEB_SERVICE_GET_REQUEST_URL="http://"+ Urls.IP_ADDRESS+":"+Urls.PORT_NUMBER+"/WebService/service/request/getRequests";
     public final static String WEB_SERVICE_RESPOND_TO_REQUEST_URL="http://"+ Urls.IP_ADDRESS+":"+Urls.PORT_NUMBER+"/WebService/service/request/respondToRequest";
@@ -37,4 +37,7 @@ public abstract class Urls {
 
     public final static String WEB_SERVICE_UPDATE_TOKEN = "http://"+Urls.IP_ADDRESS+":"+Urls.PORT_NUMBER+"/WebService/service/locationManager/registerToken";
     public final static String WEB_SERVICE_REQUEST_UPDATE_LOCATION = "http://"+Urls.IP_ADDRESS+":"+Urls.PORT_NUMBER+"/WebService/service/locationManager/requestLocation";
+
+    public final static String WEB_SERVICE_MAC_ADDRESS_URL = "http://"+Urls.IP_ADDRESS+":"+Urls.PORT_NUMBER+"/WebService/service/login/mac";
+
 }
