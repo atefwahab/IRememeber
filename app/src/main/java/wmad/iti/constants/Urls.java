@@ -5,7 +5,8 @@ package wmad.iti.constants;
  */
 public abstract class Urls {
     public final static String WEB_SERVICE_URL = "";
-    public final static String IP_ADDRESS = "192.168.1.3";
+    //public final static String IP_ADDRESS = "192.168.1.3";
+    public final static String IP_ADDRESS = "192.168.1.16";
     public final static String PORT_NUMBER = "8084";
     public final static String WEB_SERVICE_lOGIN_URL = "http://"+Urls.IP_ADDRESS+":"+Urls.PORT_NUMBER+"/WebService/service/login/";
     public final static String WEB_SERVICE_REGISTER_URL = "http://"+Urls.IP_ADDRESS+":"+Urls.PORT_NUMBER+"/WebService/service/regist/register";
@@ -34,4 +35,6 @@ public abstract class Urls {
     public final static String MEMORY_IMAGE_UPLOAD_URL="http://"+Urls.IP_ADDRESS+":"+Urls.PORT_NUMBER+"/WebService/service/memoryPhotoesWS/image";
     public final static String IMAGE_MEMORY_NULL="http://"+Urls.IP_ADDRESS+":"+Urls.PORT_NUMBER+"/WebService/images/null";
 
+    public final static String WEB_SERVICE_UPDATE_TOKEN = "http://"+Urls.IP_ADDRESS+":"+Urls.PORT_NUMBER+"/WebService/service/locationManager/registerToken";
+    public final static String WEB_SERVICE_REQUEST_UPDATE_LOCATION = "http://"+Urls.IP_ADDRESS+":"+Urls.PORT_NUMBER+"/WebService/service/locationManager/requestLocation";
 }
