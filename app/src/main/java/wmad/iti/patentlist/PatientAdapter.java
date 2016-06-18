@@ -5,16 +5,24 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
+
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -65,11 +73,32 @@ public class PatientAdapter extends RecyclerView.Adapter<PatientAdapter.ViewHold
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, final int position) {
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
         final Activity activity = (Activity) context;
         user = users.get(position);
         holder.setData(user, position);
+        holder.starImage.setChecked(false);
+        holder.starImage.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton v, boolean isChecked) {
+                // to check intenet connection to delete patient
+                if (isInternetPresent) {
+                    if (isChecked) {
+                        Toast.makeText(context, "add to favorite", Toast.LENGTH_LONG).show();
+                        holder.starImage.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.yellowstar));
+                    } else{
+                        Toast.makeText(context,"remove from favorite",Toast.LENGTH_LONG).show();
+//                        holder.starImage.setBackground(ContextCompat.getDrawable(context,R.drawable.star));
+                        holder.starImage.setBackgroundDrawable(ContextCompat.getDrawable(context,R.drawable.star));
+                    }
 
+                } if(isInternetPresent==false){
+
+                    Snackbar snackbar = Snackbar.make(v, context.getResources().getString(R.string.NoConnection), Snackbar.LENGTH_LONG);
+                    snackbar.show();
+                }
+            }
+        });
         //Listener of delete button
         holder.deleteImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -210,6 +239,7 @@ public class PatientAdapter extends RecyclerView.Adapter<PatientAdapter.ViewHold
 
         public TextView patientName;
         public ImageView deleteImage;
+        public ToggleButton starImage;
         public SimpleDraweeView patientImage;
         int position;
         User user;
@@ -221,6 +251,7 @@ public class PatientAdapter extends RecyclerView.Adapter<PatientAdapter.ViewHold
             patientName = (TextView) itemView.findViewById(R.id.patien_name);
             patientImage= (SimpleDraweeView) itemView.findViewById(R.id.patien_image);
             deleteImage= (ImageView)itemView.findViewById(R.id.delete_image);
+            starImage=(ToggleButton)itemView.findViewById(R.id.star_image);
 
             //to open patient activity
             patientName.setOnClickListener(new View.OnClickListener() {
