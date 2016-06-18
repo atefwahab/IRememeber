@@ -32,5 +32,6 @@ public abstract class Urls {
     public final static String EDIT_MEMORY_URL = "http://"+Urls.IP_ADDRESS+":"+Urls.PORT_NUMBER+"/WebService/service/memory/updateTextMemory";
     public final static String DELETE_MEMORY_URL = "http://"+Urls.IP_ADDRESS+":"+Urls.PORT_NUMBER+"/WebService/service/memory/deleteMemory";
     public final static String MEMORY_IMAGE_UPLOAD_URL="http://"+Urls.IP_ADDRESS+":"+Urls.PORT_NUMBER+"/WebService/service/memoryPhotoesWS/image";
+    public final static String IMAGE_MEMORY_NULL="http://"+Urls.IP_ADDRESS+":"+Urls.PORT_NUMBER+"/WebService/images/null";
 
 }

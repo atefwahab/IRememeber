@@ -187,18 +187,21 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
     public void onBindViewHolder(ViewHolder viewHolder, final int position) {
         Log.i("size", ">> " + memories.size());
         memory = memories.get(position);
-
+        Log.i("dataImage: ",memory.getImageUrl());
+        Log.i("dataText: ",memory.getMemoryText());
         final MemoryViewHolder holder = (MemoryViewHolder) viewHolder;
         //text
-        if (memory.getImageUrl() == null) {
+        if (memory.getImageUrl().equals(Urls.IMAGE_MEMORY_NULL)&&!memory.getMemoryText().equals("")) {
             holder.postTxt.setVisibility(View.VISIBLE);
+            holder.postImg.setVisibility(View.GONE);
+            holder.layoutPhotoMemory.setVisibility(View.GONE);
             holder.layoutTextMemory.setVisibility(View.VISIBLE);
             Log.i("urlmemory",memory.getImageUrl()+" memory");
             holder.postTxt.setText(memory.getMemoryText());
             holder.date.setText(memory.getDateTime());
-        }
+        }else
         //text & photo
-        if(memory.getImageUrl()!=null&&memory.getMemoryText()!=null){
+        if(!memory.getImageUrl().equals(Urls.IMAGE_MEMORY_NULL)&&!memory.getMemoryText().equals("")){
             holder.layoutTextMemory.setVisibility(View.VISIBLE);
             holder.layoutPhotoMemory.setVisibility(View.VISIBLE);
             holder.postTxt.setVisibility(View.VISIBLE);
@@ -208,11 +211,13 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
            // Log.i("urlmemory2", memory.getImageUrl() + " memory");
             mImageLoader = MySingleton.getInstance(context).getImageLoader();
             mImageLoader.get(memory.getImageUrl(), ImageLoader.getImageListener(holder.postImg, 0, 0));
-        }
+        }else
         //photo
-        if(memory.getImageUrl()!=null){
+        if(!memory.getImageUrl().equals(Urls.IMAGE_MEMORY_NULL)&&memory.getMemoryText().equals("")){
             holder.layoutPhotoMemory.setVisibility(View.VISIBLE);
             holder.postImg.setVisibility(View.VISIBLE);
+            holder.layoutTextMemory.setVisibility(View.GONE);
+            holder.postTxt.setVisibility(View.GONE);
             holder.date.setText(memory.getDateTime());
             mImageLoader = MySingleton.getInstance(context).getImageLoader();
             mImageLoader.get(memory.getImageUrl(), ImageLoader.getImageListener(holder.postImg, 0, 0));
