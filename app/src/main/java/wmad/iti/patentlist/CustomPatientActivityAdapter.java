@@ -1,14 +1,31 @@
 package wmad.iti.patentlist;
 
+import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+
+import java.util.HashMap;
+
+import wmad.iti.constants.Urls;
+import wmad.iti.dto.Status;
 import wmad.iti.irememeber.R;
+import wmad.iti.model.GsonRequest;
+import wmad.iti.model.MySingleton;
+import wmad.iti.model.SharedPreferenceManager;
 import wmad.iti.relativelist.RelativeActivity;
 
 /**
@@ -17,13 +34,16 @@ import wmad.iti.relativelist.RelativeActivity;
 public class CustomPatientActivityAdapter extends BaseAdapter {
     String [] result;
     Context context;
+    Activity activity;
     int [] imageId;
+    String patientEmail;
     private static LayoutInflater inflater=null;
-    public CustomPatientActivityAdapter(PatientActivity patientActivity, String[] iconesNameList, int[] iconesImages) {
+    public CustomPatientActivityAdapter(PatientActivity patientActivity, String[] iconesNameList, int[] iconesImages,String patientEmail) {
         // TODO Auto-generated constructor stub
         result=iconesNameList;
-        context=patientActivity;
+        context=activity=patientActivity;
         imageId=iconesImages;
+        this.patientEmail=patientEmail;
         inflater = ( LayoutInflater )context.
                 getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
@@ -53,7 +73,7 @@ public class CustomPatientActivityAdapter extends BaseAdapter {
         ImageView img;
     }
     @Override
-    public View getView(final int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, final View convertView, ViewGroup parent) {
         // TODO Auto-generated method stub
         Holder holder=new Holder();
         View rowView;
@@ -74,11 +94,45 @@ public class CustomPatientActivityAdapter extends BaseAdapter {
                 //Toast.makeText(context, "You Clicked " + imageId[position], Toast.LENGTH_LONG).show();
                 String[] some_array = v.getResources().getStringArray(R.array.patient_activity_arr);
 
+                // Location pressed
                 if (result[position].equals(some_array[0])) {
 
+                    final ProgressDialog requestLocation = ProgressDialog.show(context,context.getResources().getString(R.string.request_location),context.getResources().getString(R.string.please_wait),false,false);
+                    RequestQueue queue = MySingleton.getInstance(v.getContext()).getRequestQueue();
+
+                    HashMap<String,String> headers = new HashMap<String, String>();
+                    headers.put("patientEmail",patientEmail);
+                    String relativeEmail=SharedPreferenceManager.getEmail(v.getContext());
+                    headers.put("relativeEmail", relativeEmail);
+                    Log.e("patient Email",patientEmail);
+                    Log.e("patient Email",relativeEmail);
+                    GsonRequest request = new GsonRequest(Urls.WEB_SERVICE_REQUEST_UPDATE_LOCATION, Request.Method.POST, Status.class, headers,
+                            new Response.Listener<Status>() {
+                                @Override
+                                public void onResponse(Status response) {
+                                    Log.e("Location", response.getMessage());
+                                    requestLocation.dismiss();
+
+                                }
+                            },
+                            new Response.ErrorListener() {
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+                                    Log.e("Volley Error",error.toString());
+                                    requestLocation.dismiss();
+                                    Toast.makeText(context,context.getResources().getString(R.string.an_error_occurred),Toast.LENGTH_LONG).show();
+
+                                }
+                            }
+                    );
+
+                    queue.add(request);
 
                 }
+                // Memories button
                 if (result[position].equals(some_array[1])) {
+
+                    Log.e("***********","memories button pressed");
 
 
                 }

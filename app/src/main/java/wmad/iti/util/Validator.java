@@ -115,7 +115,7 @@ public class Validator {
 
         boolean flag = false;
 
-        String pattern = "[a-zA-Z0-9._-]{3,20}$";
+        String pattern = "[a-zA-Z0-9._-]{6,20}$";
 
         if (editText.getText().toString().matches(pattern)){
 

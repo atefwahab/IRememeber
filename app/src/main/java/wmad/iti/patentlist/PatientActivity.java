@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.GridView;
 import android.widget.TextView;
@@ -20,7 +21,7 @@ import wmad.iti.model.MySingleton;
 public class PatientActivity extends AppCompatActivity {
     TextView locationTextView;
     CircularImageView circularImageView;
-    String patientFirstName,patientLastName,imageUrl;
+    String patientFirstName,patientLastName,imageUrl,patientEmail;
     Toolbar toolbar;
     GridView gridView;
     int[] iconsImages;
@@ -34,6 +35,10 @@ public class PatientActivity extends AppCompatActivity {
         patientFirstName=getIntent().getStringExtra("patientFirstName");
         patientLastName=getIntent().getStringExtra("patientLastName");
         imageUrl=getIntent().getStringExtra("imageUrl");
+        // Atef added this code ...
+        patientEmail= getIntent().getStringExtra("patientEmail");
+        Log.e("patient Email",patientEmail);
+        // ......................................................
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -51,7 +56,7 @@ public class PatientActivity extends AppCompatActivity {
         gridView = (GridView) findViewById(R.id.gridView1);
         iconsImages = new int[]{R.drawable.location, R.drawable.add_memory};
         iconTitles = getResources().getStringArray(R.array.patient_activity_arr);
-        gridView.setAdapter(new CustomPatientActivityAdapter(this, iconTitles, iconsImages));
+        gridView.setAdapter(new CustomPatientActivityAdapter(this, iconTitles, iconsImages,patientEmail));
     }
     @Override
     public void onBackPressed() {

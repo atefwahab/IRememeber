@@ -122,6 +122,8 @@
     <string name="RemovedSuccessfully">Removed Successfully</string>
     <string name="FailedRemoved">Failed to remove this patient</string>
     <string name="NoConnection">No Connection</string>
+    <string name="request_location">Requesting Location</string>
+    <string name="an_error_occurred">An error has occurred.. Check your connection</string>
     <!--Delete patient Dialog-->
     <string name="deleteMessage">Are you sure,You want to delete this patient?</string>
     <string name="Ok">Ok</string>

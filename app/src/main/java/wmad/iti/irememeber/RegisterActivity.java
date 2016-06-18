@@ -371,8 +371,8 @@ public class RegisterActivity extends AppCompatActivity implements BirthdateInte
             @Override
             public void onClick(View v) {
 
-                // Show Loading location Progress ..
-                getlocationProgressDialog= ProgressDialog.show(getApplicationContext(),getResources().getString(R.string.getting_location),getResources().getString(R.string.please_wait),false,false);
+
+
                 // place picker
                 PlacePicker.IntentBuilder intentBuilder = new PlacePicker.IntentBuilder();
                 try {

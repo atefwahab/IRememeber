@@ -98,6 +98,7 @@ public class PatientHome extends AppCompatActivity {
                         user.setFirstName(users[i].getFirstName());
                         user.setLastName(users[i].getLastName());
                         user.setImageUrl(users[i].getImageUrl());
+                        user.setEmail(users[i].getEmail());
 
                         patients.add(user);
                     }

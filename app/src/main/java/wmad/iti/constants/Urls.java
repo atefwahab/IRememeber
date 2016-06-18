@@ -5,8 +5,9 @@ package wmad.iti.constants;
  */
 public abstract class Urls {
     public final static String WEB_SERVICE_URL = "";
-    public final static String IP_ADDRESS = "10.0.1.68";
-    public final static String PORT_NUMBER = "8086";
+   // public final static String IP_ADDRESS = "10.0.1.9";
+    public final static String IP_ADDRESS = "192.168.1.16";
+    public final static String PORT_NUMBER = "8084";
     public final static String WEB_SERVICE_lOGIN_URL = "http://"+Urls.IP_ADDRESS+":"+Urls.PORT_NUMBER+"/WebService/service/login/";
     public final static String WEB_SERVICE_REGISTER_URL = "http://"+Urls.IP_ADDRESS+":"+Urls.PORT_NUMBER+"/WebService/service/regist/register";
     public final static String WEB_SERVICE_GET_REQUEST_URL="http://"+ Urls.IP_ADDRESS+":"+Urls.PORT_NUMBER+"/WebService/service/request/getRequests";
@@ -16,7 +17,6 @@ public abstract class Urls {
     public final static String WEB_SERVICE_GET_PATIENT_URL="http://"+ Urls.IP_ADDRESS+":"+Urls.PORT_NUMBER+"/WebService/service/relation/getPatients";
     public final static String WEB_SERVICE_REMOVE_PATIENT_URL="http://"+ Urls.IP_ADDRESS+":"+Urls.PORT_NUMBER+"/WebService/service/relation/removePatient";
     public final static String WEB_SERVICE_GET_RELATIVES_URL="http://"+ Urls.IP_ADDRESS+":"+Urls.PORT_NUMBER+"/WebService/service/relation/getRelatives";
-
     public final static String IMAGE_UPLOAD_URL="http://"+Urls.IP_ADDRESS+":"+Urls.PORT_NUMBER+"/WebService/service/regist/file";
 
 
@@ -26,6 +26,7 @@ public abstract class Urls {
 
     public final static String WEB_SERVICE_CITY_URL = "http://"+Urls.IP_ADDRESS+":"+Urls.PORT_NUMBER+"/WebService/service/update/city";
     public final static String WEB_SERVICE_ADDRESS_URL = "http://"+Urls.IP_ADDRESS+":"+Urls.PORT_NUMBER+"/WebService/service/update/address";
-
+    public final static String WEB_SERVICE_UPDATE_TOKEN = "http://"+Urls.IP_ADDRESS+":"+Urls.PORT_NUMBER+"/WebService/service/locationManager/registerToken";
+    public final static String WEB_SERVICE_REQUEST_UPDATE_LOCATION = "http://"+Urls.IP_ADDRESS+":"+Urls.PORT_NUMBER+"/WebService/service/locationManager/requestLocation";
 
 }

@@ -2,6 +2,7 @@ package wmad.iti.model;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
 import java.sql.Date;
 import java.util.ArrayList;
@@ -297,7 +298,23 @@ public abstract class SharedPreferenceManager {
     }
 
 
+    /**
+     * @Author Atef
+     * this method used to get FCM registration Token of user
+     * @param context
+     * @return
+     */
+    public  static String getToken(Context context){
+        SharedPreferences sharedPreferences= PreferenceManager.getDefaultSharedPreferences(context);
+        String token=sharedPreferences.getString("Token","");
 
+        if (token.equals("")){
+            return null;
+        }
+
+        return token;
+
+    }
 
 
 
