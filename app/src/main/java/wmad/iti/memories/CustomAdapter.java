@@ -82,7 +82,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
             postTxt=(TextView)v.findViewById(R.id.txt1);
             layoutPhotoMemory= (LinearLayout) v.findViewById(R.id.layoutPhotoMemory);
             layoutTextMemory= (LinearLayout) v.findViewById(R.id.layoutTextMemory);
-            imageFirstCardProfile= (ImageView) v.findViewById(R.id.imagep);
+           // imageFirstCardProfile= (ImageView) v.findViewById(R.id.imagep);
           arrow.setOnClickListener(new View.OnClickListener() {
               @Override
               public void onClick(View v) {

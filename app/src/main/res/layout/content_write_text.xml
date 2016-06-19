@@ -4,18 +4,30 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="wmad.iti.memories.WriteTextActivity"
-    tools:showIn="@layout/activity_write_text">
+    tools:showIn="@layout/activity_write_text"
+    android:paddingBottom="@dimen/activity_vertical_margin">
+
+   <include android:id="@+id/memory"
+       layout="@layout/toolbar_memory"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/scrollView"
+        android:layout_alignParentTop="true"
+        android:scrollbars="none">
+
+
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:weightSum="10">
+       android:paddingTop="70dp"
+        android:weightSum="10"
+        >
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -28,14 +40,17 @@
         <EditText
             android:id="@+id/writeMemoryText"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="200dp"
             android:textColor="@color/colorPrimary"
-            android:textSize="16sp"
-            android:layout_marginTop="15dp"
+            android:textSize="20sp"
             android:hint="@string/memoryHint"
             android:layout_weight="6"
             android:inputType="text"
-            android:textColorHint="#00bcd4"/>
+            android:textColorHint="#00bcd4"
+            android:padding="10dp"
+            android:background="@null"
+            />
+
         </LinearLayout>
 
     <LinearLayout
@@ -45,6 +60,7 @@
         android:layout_weight="7"
         android:weightSum="6"
         android:gravity="center"
+        android:paddingTop="20dp"
         >
         <ImageView
             android:layout_width="0dp"
@@ -54,18 +70,8 @@
             android:layout_gravity="center"/>
 </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        >
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/saveButton"
-        android:text="save"/>
 
 </LinearLayout>
+    </ScrollView>
 
-</LinearLayout>
 </RelativeLayout>

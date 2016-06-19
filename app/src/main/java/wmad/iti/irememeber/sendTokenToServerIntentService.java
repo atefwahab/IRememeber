@@ -81,8 +81,5 @@ public class SendTokenToServerIntentService extends IntentService {
 
         }
 
-
-
-
     }
 }
