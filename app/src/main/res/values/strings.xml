@@ -166,7 +166,7 @@
 
     <!--memory-->
     <string name="memoryHint"> write your memory here</string>
-    <string name="status">status</string>
+    <string name="memory">Memory</string>
     <string name="location">location</string>
     <string name="camera">photo</string>
 </resources>

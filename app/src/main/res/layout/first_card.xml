@@ -23,24 +23,22 @@
             android:weightSum="6"
             android:layout_weight="2"
             >
-            <android.support.v7.widget.AppCompatImageView
-                android:layout_weight="1"
-                android:layout_width="0dp"
-                android:layout_height="60dp"
-                android:background="@drawable/ic_account_box_black_24dp"
-                android:id="@+id/imagep" />
 
 
-            <TextView
-                android:layout_weight="5"
+            <EditText
+                android:layout_weight="6"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="70dp"
                 android:id="@+id/entermemory"
-                android:textColor="#ffffff"
+                android:textColor="@color/colorPrimary"
                 android:textSize="16sp"
-                android:layout_marginTop="15dp"
+                android:layout_margin="8dp"
                 android:hint="@string/memoryHint"
-                android:textColorHint="#00bcd4"/>
+                android:textColorHint="#00bcd4"
+                android:background="@null"
+                android:inputType="none"
+                android:cursorVisible="false"
+                android:editable="false"/>
 
             <!--end horizontal-->
         </LinearLayout>
@@ -102,7 +100,8 @@
                     android:textColor="#607D8B"
                     android:textSize="15dp"
                     android:layout_marginTop="3dp"
-                    android:text="@string/status"
+                    android:text="@string/memory"
+
 
                     />
 
