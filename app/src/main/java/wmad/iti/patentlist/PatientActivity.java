@@ -37,7 +37,7 @@ public class PatientActivity extends AppCompatActivity {
         imageUrl=getIntent().getStringExtra("imageUrl");
         // Atef added this code ...
         patientEmail= getIntent().getStringExtra("patientEmail");
-        Log.e("patient Email",patientEmail);
+        Log.e("patient Email 1",patientEmail);
         // ......................................................
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -52,7 +52,7 @@ public class PatientActivity extends AppCompatActivity {
             }
         });
         getPatientPhoto();
-       //GridView
+        //GridView
         gridView = (GridView) findViewById(R.id.gridView1);
         iconsImages = new int[]{R.drawable.location, R.drawable.add_memory};
         iconTitles = getResources().getStringArray(R.array.patient_activity_arr);

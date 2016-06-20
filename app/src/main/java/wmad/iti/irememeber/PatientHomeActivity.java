@@ -1,5 +1,8 @@
 package wmad.iti.irememeber;
 
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothManager;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
@@ -23,6 +26,7 @@ import wmad.iti.adapter.RecyclerAdapter;
 import wmad.iti.constants.Urls;
 import wmad.iti.dto.PatientHomePage;
 import wmad.iti.dto.Relative;
+import wmad.iti.dto.Status;
 import wmad.iti.dto.User;
 import wmad.iti.memories.MemoryActivity;
 import wmad.iti.model.GsonRequest;
@@ -40,6 +44,8 @@ public class PatientHomeActivity extends AppCompatActivity implements MyLisnterI
     User user;
     Double latitude,longitude;
     String mapLabel;
+    BluetoothAdapter mBluetoothAdapter;
+
 
 
     static public PatientHomeActivity instance(){
@@ -65,6 +71,7 @@ public class PatientHomeActivity extends AppCompatActivity implements MyLisnterI
         mapLabel = getResources().getString(R.string.maplLabel);
         Log.i("the location -> ",mapLabel);
         inst=this;
+        updateMacAddress();
         setUpRecyclerView();
     }
 
@@ -178,5 +185,40 @@ public class PatientHomeActivity extends AppCompatActivity implements MyLisnterI
         super.onRestart();
 
         setUpRecyclerView();
+    }
+    public String getMacAddress() {
+        final BluetoothManager bluetoothManager =
+                (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+        mBluetoothAdapter = bluetoothManager.getAdapter();
+        String macAddress = mBluetoothAdapter.getAddress();
+      //  Toast.makeText(getApplicationContext(),macAddress,Toast.LENGTH_LONG).show();
+        Log.e("getMacAddress: ", macAddress + ">> " + mBluetoothAdapter.getAddress());
+        return macAddress;
+    }
+
+
+    public void updateMacAddress(){
+        RequestQueue queue= MySingleton.getInstance(this.getApplicationContext()).getRequestQueue();
+        final String macAddress=getMacAddress();
+        HashMap<String,String> hashMap=new HashMap<>();
+        hashMap.put("email", SharedPreferenceManager.getEmail(this.getApplicationContext()));
+        hashMap.put("macAddress",macAddress);
+        GsonRequest jsonRequest= new GsonRequest(Urls.WEB_SERVICE_MAC_ADDRESS_URL, Request.Method.POST, Status.class,hashMap, new Response.Listener<Status>() {
+            @Override
+            public void onResponse(Status response) {
+
+                if(response.getStatus()==1){
+                    SharedPreferenceManager.saveMacAddress(getApplicationContext(),macAddress);
+                }
+            }
+
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+                Log.i("Response error", error.toString());
+            }
+        });
+        queue.add(jsonRequest);
     }
 }

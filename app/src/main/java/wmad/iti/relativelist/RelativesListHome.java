@@ -98,7 +98,7 @@ public class RelativesListHome extends AppCompatActivity {
                     ArrayList<Relative> relatives = new ArrayList<>();
                     ;
                     for (int i = 0; i < users.length; i++) {
-                    //    Toast.makeText(RelativesListHome.this, "Response of get relatives => " + users[i].getFirstName(), Toast.LENGTH_LONG).show();
+                        //    Toast.makeText(RelativesListHome.this, "Response of get relatives => " + users[i].getFirstName(), Toast.LENGTH_LONG).show();
 
                         Relative relative=new Relative();
                         relative.setFirstName(users[i].getFirstName());
@@ -111,16 +111,16 @@ public class RelativesListHome extends AppCompatActivity {
 
                     addRelativesToList(relatives);
 
-                  SharedPreferenceManager.saveRelatives(getApplicationContext(), users);
-                 //   Toast.makeText(getApplicationContext(), "result of cache relative= " + result, Toast.LENGTH_LONG).show();
+                    SharedPreferenceManager.saveRelatives(getApplicationContext(), users);
+                    //   Toast.makeText(getApplicationContext(), "result of cache relative= " + result, Toast.LENGTH_LONG).show();
 
                 }
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError volleyError) {
 
-                   // Toast.makeText(RelativesListHome.this, "Error Response of get relatives: " + volleyError.getMessage(), Toast.LENGTH_LONG).show();
-                    Log.i("onErrorResponse: ", volleyError.getMessage());
+                    // Toast.makeText(RelativesListHome.this, "Error Response of get relatives: " + volleyError.getMessage(), Toast.LENGTH_LONG).show();
+                    Log.i("onErrorResponse: ", volleyError.toString());
 //                    ArrayList<Relative> arrRelatives =SharedPreferenceManager.getRelatives(getApplicationContext());
 //                    addRelativesToList(arrRelatives);
 
@@ -136,8 +136,8 @@ public class RelativesListHome extends AppCompatActivity {
 
             Snackbar snackbar=Snackbar.make(view,getApplicationContext().getResources().getString(R.string.NoConnection),Snackbar.LENGTH_LONG);
             snackbar.show();
-         ArrayList<Relative> relatives = SharedPreferenceManager.getRelatives(getApplicationContext());
-         addRelativesToList(relatives);
+            ArrayList<Relative> relatives = SharedPreferenceManager.getRelatives(getApplicationContext());
+            addRelativesToList(relatives);
         }
     }//end getData
 

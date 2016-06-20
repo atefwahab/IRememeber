@@ -47,7 +47,7 @@ public class MemoryActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_memory);
-        image= (ImageView) findViewById(R.id.imagep);
+       // image= (ImageView) findViewById(R.id.imagep);
       //  videoImg= (ImageView) findViewById(R.id.videoimage);
         cameraImg= (ImageView) findViewById(R.id.cameraimg);
         locationImg= (ImageView) findViewById(R.id.locationimg);

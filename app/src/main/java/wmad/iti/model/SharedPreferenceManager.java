@@ -316,7 +316,24 @@ public abstract class SharedPreferenceManager {
 
     }
 
+    public static void saveMacAddress(Context context ,String macAddress) {
+
+        // to get thr shared preference
+        SharedPreferences sharedPreferences = context.getSharedPreferences(LOGIN_SHARED_PREFERENCE, context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        //save user's first name
+        editor.putString("macAddress", macAddress);
+        editor.commit();
+    }
 
 
+    public static String getMacAddress(Context context) {
+        String macAddress = "";
+        SharedPreferences sharedPreferences = context.getSharedPreferences(LOGIN_SHARED_PREFERENCE, context.MODE_PRIVATE);
+        sharedPreferences.contains(LOGIN_SHARED_PREFERENCE);
+        //get user's first name
+        macAddress = sharedPreferences.getString("macAddress","");
+        return macAddress;
+    }
 
 }

@@ -50,10 +50,11 @@ public class WriteTextActivity extends AppCompatActivity {
     private Context contextForDialog= null;
     RequestQueue requestQueue;
     GsonRequest gsonRequest;
-    Button btnSave;
+   // Button btnSave;
     EditText textEditMemory;
     Memory memory;
     ImageView takenImg;
+    Button postButton;
     //Camera
     File photoFile = null;
     String mCurrentPhotoPath;
@@ -73,11 +74,13 @@ public class WriteTextActivity extends AppCompatActivity {
         contextForDialog = this;
         setContentView(R.layout.activity_write_text);
 
-        btnSave= (Button) findViewById(R.id.saveButton);
+        //btnSave= (Button) findViewById(R.id.saveButton);
         textEditMemory= (EditText) findViewById(R.id.writeMemoryText);
         takenImg=(ImageView)findViewById(R.id.imagetaken);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.memory);
         setSupportActionBar(toolbar);
+        postButton=(Button)toolbar.findViewById(R.id.postbutton);
+
         getSupportActionBar().setTitle("write in  memory ");
         toolbar.setNavigationIcon(R.drawable.navigation_back);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -86,6 +89,8 @@ public class WriteTextActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
+
+
 
 
         positionIntent=getIntent().getIntExtra("position", 1000);
@@ -114,7 +119,7 @@ public class WriteTextActivity extends AppCompatActivity {
 
 }
 
-    btnSave.setOnClickListener(new View.OnClickListener() {
+       postButton.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             //Case photo
@@ -186,8 +191,8 @@ public class WriteTextActivity extends AppCompatActivity {
 
         Log.i("enter save memory", "memory");
         HashMap<String, String> header = new HashMap<>();
-        header.put("patientEmail","ahmed@gmail.com");
-        header.put("relativeEmail", "doaa@gmail.com");
+        header.put("patientEmail",SharedPreferenceManager.getUser(getApplicationContext()).getEmail());
+        header.put("relativeEmail", null);
         header.put("text", textEditMemory.getText().toString());
         header.put("date",currentDateandTime);
 
