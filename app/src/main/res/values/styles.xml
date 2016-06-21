@@ -48,5 +48,24 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="dialogeTheme" parent="Theme.AppCompat.Dialog">
+
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <!-- custom theme for buttons-->
+        <style name="AppTheme.Button" parent="Widget.AppCompat.Button.Colored">
+            <item name="colorButtonNormal">@color/colorPrimary</item>
+            <item name="android:textColor">@color/primaryTextColor</item>
+            <item name="android:bottomRightRadius">10dp</item>
+            <item name="android:bottomLeftRadius">10dp</item>
+            <item name="android:topLeftRadius">10dp</item>
+            <item name="android:topRightRadius">10dp</item>
+        </style>
+
 
 </resources>

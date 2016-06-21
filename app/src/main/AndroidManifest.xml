@@ -7,6 +7,7 @@
         android:required="true" />
 
     <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.WRITE_SMS" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.SEND_SMS" />
@@ -18,7 +19,9 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
 
     <application
         android:largeHeap="true"
@@ -61,7 +64,7 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyCvStzDK_pkyQhMGf-V9ouu1lfDiT7oxU4" />
+            android:value="@string/google_maps_key" />
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
@@ -71,7 +74,7 @@
             android:theme="@style/MaterialTheme" />
         <activity
             android:name="wmad.iti.relativelist.RelativeActivity"
-            android:theme="@style/MaterialTheme"></activity>
+            android:theme="@style/MaterialTheme" />
         <activity
             android:name="wmad.iti.personalprofile.RlativeProfileActivity"
             android:label="@string/app_name"
@@ -84,10 +87,16 @@
         <activity
             android:name="wmad.iti.memories.MemoryActivity"
             android:label="@string/app_name"
-            android:theme="@style/MaterialTheme"/>
+            android:theme="@style/MaterialTheme" />
         <activity
             android:name="wmad.iti.memories.WriteTextActivity"
-            android:theme="@style/MaterialTheme"></activity>
+            android:theme="@style/MaterialTheme" />
+
+        <!--maps-->
+        <activity
+            android:name="wmad.iti.irememeber.MapsActivity"
+            android:label="@string/title_activity_maps" />
+
 
         <!-- The Service responsible for receiving messages from FCM -->
         <service android:name=".MyFirebaseMessagingService">
@@ -104,12 +113,34 @@
         </service>
         <service
             android:name=".SendTokenToServerIntentService"
+            android:exported="false" />
+        <service
+            android:name=".BluetoothServices"
+            android:exported="true" />
+
+        <service
+            android:name=".NotificationService"
+            android:exported="true" />
+
+        <activity android:name=".BluetoothDialog"
+
+            android:theme="@style/dialogeTheme"
+            />
+
+
+        <service
+            android:name=".ShareLocationService"
             android:exported="false"></service>
 
         <activity android:name="wmad.iti.MutualMemories.MutualMemoryWriteTextActivity"
             android:theme="@style/MaterialTheme"/>
         <activity android:name="wmad.iti.MutualMemories.MutualMemoryActivity"
             android:theme="@style/MaterialTheme"/>
+
+
+        <activity
+            android:name=".ReceiveOpenGpsRequestActivity"
+            android:theme="@style/AppTheme"></activity>
 
     </application>
 

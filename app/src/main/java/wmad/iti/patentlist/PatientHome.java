@@ -39,6 +39,9 @@ public class PatientHome extends AppCompatActivity {
     GsonRequest gsonRequest;
     RequestQueue requestQueue;
     ConnectionDetector connectionDetector;
+    static PatientHome inst;
+
+    public static PatientHome instance(){return inst;}
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +49,7 @@ public class PatientHome extends AppCompatActivity {
         //to initialize fresco used to load images
         Fresco.initialize(this);
         setContentView(R.layout.patient_home);
-
+        inst=this;
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(R.drawable.navigation_back);
@@ -110,7 +113,7 @@ public class PatientHome extends AppCompatActivity {
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError volleyError) {
-                    Log.i("onErrorResponse: ", volleyError.getMessage());
+                    Log.i("onErrorResponse: ", volleyError.toString());
 //                    ArrayList<User>arrPatients=SharedPreferenceManager.getPatients(getApplicationContext());
 //                    addPatientsToList(arrPatients);
 

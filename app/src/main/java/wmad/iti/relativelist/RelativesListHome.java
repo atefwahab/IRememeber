@@ -41,24 +41,24 @@ public class RelativesListHome extends AppCompatActivity {
     //Creating Views
     private RecyclerView recyclerView;
     private RelativeAdapter adapter;
-
+    static RelativesListHome inst;
     GsonRequest gsonRequest;
     RequestQueue requestQueue;
     ConnectionDetector connectionDetector;
     Toolbar toolbar;
-
+    String emailTrusted="";
+        public  static RelativesListHome instance(){return  inst;}
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //to initialize fresco used to load images
         Fresco.initialize(this);
         setContentView(R.layout.relatives_list_home);
-
+        inst=this;
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(R.drawable.navigation_back);
         getSupportActionBar().setTitle("Relatives");
-
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -109,11 +109,9 @@ public class RelativesListHome extends AppCompatActivity {
                         relative.setEmail(users[i].getEmail());
                         relatives.add(relative);
                     }
-                     if(relatives.size()!=0) {
-                         addRelativesToList(relatives);
-                     }else{
-                         Toast.makeText(getApplicationContext(),"There are not relatives to show", Toast.LENGTH_LONG).show();
-                     }
+
+                    addRelativesToList(relatives);
+
                   SharedPreferenceManager.saveRelatives(getApplicationContext(), users);
                  //   Toast.makeText(getApplicationContext(), "result of cache relative= " + result, Toast.LENGTH_LONG).show();
 
@@ -133,6 +131,7 @@ public class RelativesListHome extends AppCompatActivity {
 
             //Adding request to the queue
             requestQueue.add(gsonRequest);
+            getTrusted(SharedPreferenceManager.getEmail(getApplicationContext()));
         }//end if
         if(isInternetPresent==false) {
 
@@ -150,7 +149,8 @@ public class RelativesListHome extends AppCompatActivity {
 
     public void initializeRecyclerView( ){
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        adapter = new RelativeAdapter(listUsers, this);
+        Log.i("email trusted  ", emailTrusted);
+        adapter = new RelativeAdapter(listUsers, this,emailTrusted);
 
         //Adding adapter to recyclerview
         recyclerView.setAdapter(adapter);
@@ -169,6 +169,33 @@ public class RelativesListHome extends AppCompatActivity {
 
         //This method used to initialize recycler view
         initializeRecyclerView();
+
+    }
+
+    public void getTrusted(String patientEmail){
+        Log.i("checkTrusted: ",patientEmail);
+        RequestQueue queue= MySingleton.getInstance(RelativesListHome.instance().getApplicationContext()).getRequestQueue();
+        HashMap<String,String> hashMap=new HashMap<>();
+        hashMap.put("patientemail", SharedPreferenceManager.getEmail(RelativesListHome.instance().getApplicationContext()));
+        hashMap.put("relativeemail",patientEmail);
+        GsonRequest jsonRequest= new GsonRequest(Urls.WEB_SERVICE_GET_TRUSTED_URL, Request.Method.POST, Relative.class,hashMap, new Response.Listener<Relative>() {
+            @Override
+            public void onResponse(Relative response) {
+             if(response.getEmail()!=null) {
+                 emailTrusted = response.getEmail();
+                 Log.i("emailTrusted: ", emailTrusted);
+             }
+            }
+
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+                Log.i("Response error", error.toString());
+            }
+        });
+        queue.add(jsonRequest);
+
 
     }
 

@@ -111,7 +111,7 @@ public class CustomPatientActivityAdapter extends BaseAdapter {
                     String relativeEmail=SharedPreferenceManager.getEmail(v.getContext());
                     headers.put("relativeEmail", relativeEmail);
                     Log.e("patient Email",patientEmail);
-                    Log.e("patient Email",relativeEmail);
+                    Log.e("relative Email",relativeEmail);
                     GsonRequest request = new GsonRequest(Urls.WEB_SERVICE_REQUEST_UPDATE_LOCATION, Request.Method.POST, Status.class, headers,
                             new Response.Listener<Status>() {
                                 @Override

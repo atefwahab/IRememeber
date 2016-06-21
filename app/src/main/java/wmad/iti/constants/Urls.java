@@ -5,10 +5,10 @@ package wmad.iti.constants;
  */
 public abstract class Urls {
     public final static String WEB_SERVICE_URL = "";
-    //public final static String IP_ADDRESS = "192.168.1.7";
-    public final static String IP_ADDRESS = "10.0.1.68";
-    public final static String PORT_NUMBER = "8085";
-    public final static String WEB_SERVICE_lOGIN_URL = "http://"+Urls.IP_ADDRESS+":"+Urls.PORT_NUMBER+"/WebService/service/login/loginM";
+    //public final static String IP_ADDRESS = "192.168.1.3";
+    public final static String IP_ADDRESS = "10.0.1.25";
+    public final static String PORT_NUMBER = "8084";
+    public final static String WEB_SERVICE_lOGIN_URL = "http://"+Urls.IP_ADDRESS+":"+Urls.PORT_NUMBER+"/WebService/service/login/login";
     public final static String WEB_SERVICE_REGISTER_URL = "http://"+Urls.IP_ADDRESS+":"+Urls.PORT_NUMBER+"/WebService/service/regist/register";
     public final static String WEB_SERVICE_GET_REQUEST_URL="http://"+ Urls.IP_ADDRESS+":"+Urls.PORT_NUMBER+"/WebService/service/request/getRequests";
     public final static String WEB_SERVICE_RESPOND_TO_REQUEST_URL="http://"+ Urls.IP_ADDRESS+":"+Urls.PORT_NUMBER+"/WebService/service/request/respondToRequest";
@@ -40,5 +40,16 @@ public abstract class Urls {
 
     public final static String WEB_SERVICE_MAC_ADDRESS_URL = "http://"+Urls.IP_ADDRESS+":"+Urls.PORT_NUMBER+"/WebService/service/login/mac";
     public final static String GET_MUTUAL_MEMORIES_URL = "http://"+Urls.IP_ADDRESS+":"+Urls.PORT_NUMBER+"/WebService/service/memory/getMutualMemories";
+
+    public final static String WEB_SERVICE_BLUETOOTH_URL="http://"+Urls.IP_ADDRESS+":"+Urls.PORT_NUMBER+"/WebService/service/Bluetooth";
+
+    public final static String WEB_SERVICE_SET_TRUSTED_URL="http://"+Urls.IP_ADDRESS+":"+Urls.PORT_NUMBER+"/WebService/service/trust";
+//    public final static String WEB_SERVICE_CHECK_TRUSTED_URL="http://"+Urls.IP_ADDRESS+":"+Urls.PORT_NUMBER+"/WebService/service/trust/check";
+    public final static String WEB_SERVICE_REMOVE_TRUSTED_URL="http://"+Urls.IP_ADDRESS+":"+Urls.PORT_NUMBER+"/WebService/service/trust/remove";
+    public final static String WEB_SERVICE_GET_TRUSTED_URL="http://"+Urls.IP_ADDRESS+":"+Urls.PORT_NUMBER+"/WebService/service/trust/get";
+
+    public final static String WEB_SERVICE_DISCONNECT_USER = "http://" + Urls.IP_ADDRESS + ":" + Urls.PORT_NUMBER + "/WebService/service/locationManager/disconnectUser";
+    public final static String WEB_SERVICE_BROADCAST_LOCATION = "http://"+Urls.IP_ADDRESS+":"+Urls.PORT_NUMBER+"/WebService/service/locationManager/broadcastLocation";
+
 
 }
