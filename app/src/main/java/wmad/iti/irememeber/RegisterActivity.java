@@ -775,7 +775,7 @@ public class RegisterActivity extends AppCompatActivity implements BirthdateInte
             lastnameLayout = (LinearLayout) findViewById(R.id.lastnameLayout);
             firstnameNextButton.setVisibility(View.GONE);
             firstnameTextInputLayout.setErrorEnabled(false);
-            //firstNameEditText.setEnabled(false);
+            firstNameEditText.setEnabled(false);
             lastnameLayout.setVisibility(View.VISIBLE);
 
             scrollView.post(new Runnable() {
@@ -812,7 +812,7 @@ public class RegisterActivity extends AppCompatActivity implements BirthdateInte
             user.setLastName(lastnameEditText.getText().toString());
             phonenumLayout = (LinearLayout) findViewById(R.id.phonenumLayout);
             lastnameNextButton.setVisibility(View.GONE);
-            //lastnameEditText.setEnabled(false);
+            lastnameEditText.setEnabled(false);
             lastnameTextInputLayout.setErrorEnabled(false);
             phonenumLayout.setVisibility(View.VISIBLE);
 
@@ -847,7 +847,7 @@ public class RegisterActivity extends AppCompatActivity implements BirthdateInte
             user.setPhoneNumber(phoneInputView.getNumber());
             homeNumberLayout = (LinearLayout) findViewById(R.id.homePhoneNumberLayout);
             phoneNumberNextButton.setVisibility(View.GONE);
-            //phoneInputView.setEnabled(false);
+            phoneInputView.setEnabled(false);
             homeNumberLayout.setVisibility(View.VISIBLE);
 
             scrollView.post(new Runnable() {
@@ -880,7 +880,7 @@ public class RegisterActivity extends AppCompatActivity implements BirthdateInte
 
 
         homeNumberNextButton.setVisibility(View.GONE);
-        //homeNumberEditText.setEnabled(false);
+        homeNumberEditText.setEnabled(false);
         birthdateEditText.setEnabled(false);
         birthdateLayout.setVisibility(View.VISIBLE);
 
@@ -973,7 +973,7 @@ public class RegisterActivity extends AppCompatActivity implements BirthdateInte
             user.setEmail(emailEditText.getText().toString());
 
             passwordLayout = (LinearLayout) findViewById(R.id.passwordLayout);
-            // emailEditText.setEnabled(false);
+            emailEditText.setEnabled(false);
             emailNextButton.setVisibility(View.GONE);
             passwordLayout.setVisibility(View.VISIBLE);
 
