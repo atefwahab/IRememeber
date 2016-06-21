@@ -7,7 +7,9 @@ public abstract class Urls {
     public final static String WEB_SERVICE_URL = "";
     //public final static String IP_ADDRESS = "192.168.1.3";
     public final static String IP_ADDRESS = "10.0.1.25";
-    public final static String PORT_NUMBER = "8084";
+
+
+    public final static String PORT_NUMBER = "8085";
     public final static String WEB_SERVICE_lOGIN_URL = "http://"+Urls.IP_ADDRESS+":"+Urls.PORT_NUMBER+"/WebService/service/login/login";
     public final static String WEB_SERVICE_REGISTER_URL = "http://"+Urls.IP_ADDRESS+":"+Urls.PORT_NUMBER+"/WebService/service/regist/register";
     public final static String WEB_SERVICE_GET_REQUEST_URL="http://"+ Urls.IP_ADDRESS+":"+Urls.PORT_NUMBER+"/WebService/service/request/getRequests";
