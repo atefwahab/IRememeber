@@ -41,5 +41,6 @@ public abstract class Urls {
 
     public final static String WEB_SERVICE_MAC_ADDRESS_URL = "http://"+Urls.IP_ADDRESS+":"+Urls.PORT_NUMBER+"/WebService/service/login/mac";
 
+    public final static String WEB_SERVICE_DISCONNECT_USER = "http://" + Urls.IP_ADDRESS + ":" + Urls.PORT_NUMBER + "/WebService/service/locationManager/disconnectUser";
     public final static String WEB_SERVICE_BROADCAST_LOCATION = "http://"+Urls.IP_ADDRESS+":"+Urls.PORT_NUMBER+"/WebService/service/locationManager/broadcastLocation";
 }

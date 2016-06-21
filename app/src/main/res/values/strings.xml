@@ -142,9 +142,6 @@
     </string-array>
 
 
-
-
-
     <!-- profile relative activity -->
     <string name="yourphone">Your phone</string>
     <string name="yourName">Your Name</string>
@@ -153,6 +150,11 @@
     <string name="youraddress">youraddress</string>
     <string name="title_activity_patient_profile">PatientProfileActivity</string>
 
+    <!--receive open gps request-->
+    <string name="wants_to_know"> wants to know your location.</string>
+    <string name="accept">Accept</string>
+    <string name="decline">Decline</string>
+    <string name="user_diconnected">Patient has disconnected</string>
 
     <!-- home activity -->
     <string name="title_activity_maps">Map</string>

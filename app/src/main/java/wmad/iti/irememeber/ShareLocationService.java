@@ -19,6 +19,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.google.gson.Gson;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -46,7 +47,7 @@ public class ShareLocationService extends Service {
             public void onLocationChanged(Location location) {
 
 
-                Toast.makeText(getApplicationContext(), "Your Location is " + location.getLatitude() + " & " + location.getLongitude(), Toast.LENGTH_SHORT).show();
+                Log.i(TAG, "Location Latitude>>" + location.getLatitude());
 
                 RequestQueue queue = MySingleton.getInstance(getApplicationContext()).getRequestQueue();
                 HashMap<String,String> headers = new HashMap<>();
@@ -85,6 +86,27 @@ public class ShareLocationService extends Service {
             @Override
             public void onProviderDisabled(String provider) {
 
+                //Disconnect user
+                RequestQueue queue = MySingleton.getInstance(getApplicationContext()).getRequestQueue();
+                HashMap<String, String> headers = new HashMap<>();
+                headers.put("relativeEmail", relativeEmail);
+
+
+                GsonRequest request = new GsonRequest(Urls.WEB_SERVICE_DISCONNECT_USER, Request.Method.POST, Status.class, headers,
+                        new Response.Listener<Status>() {
+                            @Override
+                            public void onResponse(Status response) {
+                                Log.i(TAG, response.getMessage());
+                            }
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                Log.e(TAG, error.toString());
+                            }
+                        }
+                );
+                queue.add(request);
                 ShareLocationService.this.stopSelf();
             }
         };

@@ -2,6 +2,8 @@ package wmad.iti.irememeber;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.LocationManager;
 import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +13,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageRequest;
+import com.mikhaellopez.circularimageview.CircularImageView;
+
+import wmad.iti.model.MySingleton;
+
 /**
  * @Author Atef
  */
@@ -19,21 +28,45 @@ public class ReceiveOpenGpsRequestActivity extends AppCompatActivity {
     TextView textView;
     Button acceptButton;
     Button declineButton;
+    CircularImageView circularImageView;
+    Bitmap relativeImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_receive_open_gps_request);
 
+        circularImageView = (CircularImageView) findViewById(R.id.relativeImageView);
         textView = (TextView) findViewById(R.id.textView);
         acceptButton = (Button) findViewById(R.id.acceptButton);
         declineButton=(Button) findViewById(R.id.declineButton);
 
         final Intent intent = getIntent();
 
-        if(intent.getStringExtra("firstname")!=null){
+        // volley request
+        ImageRequest imageRequest = new ImageRequest(intent.getStringExtra("imageUrl"), new Response.Listener<Bitmap>() {
+            @Override
+            public void onResponse(Bitmap response) {
 
-            textView.setText(intent.getStringExtra("firstname")+" "+intent.getStringExtra("lastname")+getResources().getString(R.string.wants_to_know));
+                relativeImage = response;
+                circularImageView.setImageBitmap(relativeImage);
+
+            }
+        }, 0, 0, null, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+                relativeImage = BitmapFactory.decodeResource(getResources(), R.drawable.default_profle);
+                circularImageView.setImageBitmap(relativeImage);
+            }
+        });
+
+        // Access the RequestQueue through your singleton class.
+        MySingleton.getInstance(this).addToRequestQueue(imageRequest);
+
+
+        if (intent.getStringExtra("firstname") != null) {
+            textView.setText(intent.getStringExtra("firstname") + "" + intent.getStringExtra("lastname") + " " + getResources().getString(R.string.wants_to_know));
         }
 
         // accept will open GPS Settings

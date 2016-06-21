@@ -400,12 +400,8 @@ public class PatientProfileActivity extends AppCompatActivity {
 
                     user = response.getUser();
                     setFirstNameText(user);
-
                     setPhoneNumText(user);
                     setCountryText(user);
-                    Log.i("&&&&&&&&&: ", user.getCountry());
-                  //  countrytText.setText(user.getCountry());
-
                     setCityText(user);
                     setAddressText(user);
 
@@ -421,8 +417,12 @@ public class PatientProfileActivity extends AppCompatActivity {
                 else {
 
                     Log.i("loginfail", response.toString());
-                    SharedPreferenceManager.getUser(getApplicationContext());
-
+                    User user = SharedPreferenceManager.getUser(getApplicationContext());
+                    setFirstNameText(user);
+                    setPhoneNumText(user);
+                    setCountryText(user);
+                    setCityText(user);
+                    setAddressText(user);
                 }//end else
 
             }
@@ -432,9 +432,13 @@ public class PatientProfileActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
 
-                Log.i("error volley", error.toString());
-                SharedPreferenceManager.getUser(getApplicationContext());
-
+                // Log.i("error volley", error.toString());
+                User user = SharedPreferenceManager.getUser(getApplicationContext());
+                setFirstNameText(user);
+                setPhoneNumText(user);
+                setCountryText(user);
+                setCityText(user);
+                setAddressText(user);
             }
 
         });

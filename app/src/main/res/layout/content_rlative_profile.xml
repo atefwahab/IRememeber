@@ -35,10 +35,9 @@
 
         <FrameLayout
             android:weightSum="10"
-
             android:layout_width="match_parent"
             android:layout_height="200dp"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="55dp"
            >
 
             <!--circle view for preview profile picture-->
@@ -74,7 +73,7 @@
 
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="100dp"
+            android:layout_height="80dp"
             android:visibility="visible"
             android:layout_marginTop="20dp"
             android:id="@+id/firstnameLayout">
@@ -87,6 +86,8 @@
                     android:textColorHint="@color/colorPrimary"
                     android:background="@drawable/textview_border"
                     android:id="@+id/firsttext"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginRight="12dp"
                     android:drawableRight="@drawable/pencil"
                     android:textColorHighlight="#ffffff"/>
 
@@ -98,9 +99,8 @@
 
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="100dp"
+            android:layout_height="80dp"
             android:visibility="visible"
-
             android:id="@+id/phonenumLayout">
 
 
@@ -109,6 +109,8 @@
                     android:layout_height="38dp"
                     android:hint="@string/yourphone"
                    android:gravity="center"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginRight="12dp"
                     android:textColorHint="@color/colorPrimary"
                     android:background="@drawable/textview_border"
                     android:id="@+id/phonetext"

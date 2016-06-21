@@ -425,7 +425,9 @@ public class RlativeProfileActivity extends AppCompatActivity {
                 else {
 
                     Log.i("loginfail", response.toString());
-                    SharedPreferenceManager.getUser(getApplicationContext());
+                    User user = SharedPreferenceManager.getUser(getApplicationContext());
+                    setFirstNameText(user);
+                    setPhoneNumText(user);
 
                 }//end else
 
@@ -437,8 +439,9 @@ public class RlativeProfileActivity extends AppCompatActivity {
             public void onErrorResponse(VolleyError error) {
 
                 Log.i("error volley", error.toString());
-                SharedPreferenceManager.getUser(getApplicationContext());
-
+                User user = SharedPreferenceManager.getUser(getApplicationContext());
+                setFirstNameText(user);
+                setPhoneNumText(user);
             }
 
         });
