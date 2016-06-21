@@ -1,4 +1,4 @@
-package wmad.iti.memories;
+package wmad.iti.MutualMemories;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,8 +17,6 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,38 +27,38 @@ import wmad.iti.dto.Memory;
 import wmad.iti.dto.Relative;
 import wmad.iti.dto.User;
 import wmad.iti.irememeber.R;
+import wmad.iti.memories.CustomAdapter;
+import wmad.iti.memories.WriteTextActivity;
 import wmad.iti.model.ConnectionDetector;
 import wmad.iti.model.GsonRequest;
 import wmad.iti.model.MySingleton;
 import wmad.iti.model.SharedPreferenceManager;
+import wmad.iti.patentlist.CustomPatientActivityAdapter;
+import wmad.iti.relativelist.CustomRelativeActivityAdapter;
 
-public class MemoryActivity extends AppCompatActivity {
+public class MutualMemoryActivity extends AppCompatActivity {
     //toolbar
     private Toolbar toolbar;
-
     final String TAG = "myTag";
     // private RecyclerView.LayoutManager mLayoutManager;
     GsonRequest gsonRequest;
     RequestQueue requestQueue;
     RecyclerView recyclerView;
-    CustomAdapter adapter;
+    MutualMemoryCustomAdapter adapter;
     private List<Memory> listMemories;
     ArrayList<Memory> patientMemories;
     ImageView image, videoImg, cameraImg, locationImg, takenImg;
     TextView enterMemory, video, camera, location;
     User user;
-    int flag;
+    int flag,type;
     ConnectionDetector connectionDetector;
+    String patientEmailIntent, patientFirstName, patientLastName, relativeEmailIntent, relativeFirstNameIntent,
+            relativeLastNameIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //to initialize fresco used to load images
-        Fresco.initialize(this);
-
         setContentView(R.layout.activity_memory);
-
-
         // image= (ImageView) findViewById(R.id.imagep);
         //  videoImg= (ImageView) findViewById(R.id.videoimage);
         cameraImg = (ImageView) findViewById(R.id.cameraimg);
@@ -70,13 +68,25 @@ public class MemoryActivity extends AppCompatActivity {
         camera = (TextView) findViewById(R.id.camera);
         takenImg = (ImageView) findViewById(R.id.imagetaken);
 
+        type=getIntent().getIntExtra("type", 0) ;
+
+        patientEmailIntent = getIntent().getStringExtra("patientEmail");
+        patientFirstName = getIntent().getStringExtra("patientFirstName");
+        patientLastName = getIntent().getStringExtra("patientLastName");
+
+        relativeEmailIntent = getIntent().getStringExtra("relativeEmail");
+        relativeFirstNameIntent = getIntent().getStringExtra("relativeFirstName");
+        relativeLastNameIntent = getIntent().getStringExtra("relativeLastName");
         //when you click in camera
         camera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 flag = 1;
-                Intent intent = new Intent(getApplicationContext(), WriteTextActivity.class);
+                Intent intent = new Intent(getApplicationContext(), MutualMemoryWriteTextActivity.class);
+                intent.putExtra("patientEmail", patientEmailIntent);
+                intent.putExtra("relativeEmail", relativeEmailIntent);
                 intent.putExtra("flag", flag);
+                intent.putExtra("type",type);
                 startActivity(intent);
                 //selectImage();
 
@@ -86,8 +96,11 @@ public class MemoryActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 flag = 2;
-                Intent intent = new Intent(getApplicationContext(), WriteTextActivity.class);
+                Intent intent = new Intent(getApplicationContext(), MutualMemoryWriteTextActivity.class);
+                intent.putExtra("relativeEmail", relativeEmailIntent);
+                intent.putExtra("patientEmail", patientEmailIntent);
                 intent.putExtra("flag", flag);
+                intent.putExtra("type",type);
                 startActivity(intent);
 
             }
@@ -123,10 +136,23 @@ public class MemoryActivity extends AppCompatActivity {
         //if there is internet connection
         if (isInternetPresent == true) {
             HashMap<String, String> header = new HashMap<>();
-            header.put("patientEmail", SharedPreferenceManager.getUser(getApplicationContext()).getEmail());
+            //to check if patient enter edit memories at specific relative to get mutual memories
+            if (getIntent().getIntExtra("type", 0) == CustomRelativeActivityAdapter.IS_PATIENT) {
+
+                header.put("patientEmail", SharedPreferenceManager.getUser(getApplicationContext()).getEmail());
+                header.put("relativeEmail", relativeEmailIntent);
+                Log.i("relativeEmailIntent", relativeEmailIntent + "relativeEmailIntent");
+
+            }
+          //  to check if relative enter edit memories at specific patient to get mutual memories
+            if (getIntent().getIntExtra("type", 0) == CustomPatientActivityAdapter.IS_RELATIVE) {
+                header.put("patientEmail", patientEmailIntent);
+                header.put("relativeEmail", SharedPreferenceManager.getUser(getApplicationContext()).getEmail());
+            }
+
             requestQueue = MySingleton.getInstance(getApplicationContext()).getRequestQueue();
             //Creating a json request to get memoriess
-            gsonRequest = new GsonRequest(Urls.GET_MEMORIES_URL, Request.Method.POST, Memory[].class, header, new Response.Listener<Memory[]>() {
+            gsonRequest = new GsonRequest(Urls.GET_MUTUAL_MEMORIES_URL, Request.Method.POST, Memory[].class, header, new Response.Listener<Memory[]>() {
 
                 @Override
                 public void onResponse(Memory[] memories) {
@@ -149,18 +175,18 @@ public class MemoryActivity extends AppCompatActivity {
                         if (memories[i].getRelative() != null) {
                             Relative relative = memory.setRelative(memories[i].getRelative());
                         }
-                        Log.i("sizeMemories",patientMemories.size()+" size2");
                         patientMemories.add(memory);
-                        if(patientMemories.size()==0){
-                            Toast.makeText(getApplicationContext(),getResources().getString(R.string.NoMemories),Toast.LENGTH_LONG).show();
-                            Log.i("sizeMemories",patientMemories.size()+" size");
+//                        Toast.makeText(getApplicationContext(), relative.getFirstName(), Toast.LENGTH_LONG).show();
+                        if(patientMemories.size()!=0){
+                            initializeRecyclerView(patientMemories);
                         }
-
+                        else{
+                            Toast.makeText(getApplicationContext(),getResources().getString(R.string.NoMutualMemories),Toast.LENGTH_LONG).show();
+                        }
                         SharedPreferenceManager.saveMemories(getApplicationContext(), memories);
                     }
 
-                    //addTextMemoriesToList(patientMemories);
-                    initializeRecyclerView(patientMemories);
+
 
                 }
             }, new Response.ErrorListener() {
@@ -176,8 +202,6 @@ public class MemoryActivity extends AppCompatActivity {
             });
 
 
-            // add tag to it
-            gsonRequest.setTag(TAG);
             //Adding request to the queue
             requestQueue.add(gsonRequest);
         } else {
@@ -197,7 +221,10 @@ public class MemoryActivity extends AppCompatActivity {
 
     public void initializeRecyclerView(ArrayList<Memory> patientMemories) {
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        adapter = new CustomAdapter(patientMemories, this);
+        if(getIntent().getIntExtra("type",0)==CustomRelativeActivityAdapter.IS_PATIENT){adapter = new MutualMemoryCustomAdapter(patientMemories, this,  getIntent().getStringExtra("relativeFirstName"), getIntent().getStringExtra("relativeLastName"), getIntent().getIntExtra("type",0));}
+
+        if(getIntent().getIntExtra("type",0)==CustomPatientActivityAdapter.IS_RELATIVE){adapter = new MutualMemoryCustomAdapter(patientMemories, this,  patientFirstName, patientLastName, getIntent().getIntExtra("type",0));}
+
 
         //Adding adapter to recyclerview
         recyclerView.setAdapter(adapter);
@@ -209,10 +236,12 @@ public class MemoryActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        getMemoriesData(findViewById(android.R.id.content));
+
+            getMemoriesData(findViewById(android.R.id.content));
+
+
 
     }
-
     @Override
     protected void onStop() {
         super.onStop();
@@ -230,4 +259,5 @@ public class MemoryActivity extends AppCompatActivity {
             MySingleton.getInstance(this).getRequestQueue().cancelAll(TAG);
         }
     }
+
 }

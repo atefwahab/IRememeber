@@ -3,7 +3,7 @@ package wmad.iti.patentlist;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.support.design.widget.Snackbar;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,30 +20,36 @@ import com.android.volley.VolleyError;
 
 import java.util.HashMap;
 
+import wmad.iti.MutualMemories.MutualMemoryActivity;
 import wmad.iti.constants.Urls;
 import wmad.iti.dto.Status;
 import wmad.iti.irememeber.R;
 import wmad.iti.model.GsonRequest;
 import wmad.iti.model.MySingleton;
 import wmad.iti.model.SharedPreferenceManager;
-import wmad.iti.relativelist.RelativeActivity;
 
 /**
  * Created by Doaa on 5/29/2016.
  */
 public class CustomPatientActivityAdapter extends BaseAdapter {
+    public final static int IS_RELATIVE = 2345;
     String [] result;
     Context context;
     Activity activity;
     int [] imageId;
     String patientEmail;
+    String patientFirstName,patientLastName,relativeMemoriesFromSpecificPatient;
     private static LayoutInflater inflater=null;
-    public CustomPatientActivityAdapter(PatientActivity patientActivity, String[] iconesNameList, int[] iconesImages,String patientEmail) {
+    public CustomPatientActivityAdapter(PatientActivity patientActivity, String[] iconesNameList, int[] iconesImages,String patientEmail,
+                                        String patientFirstName,String patientLastName,String relativeMemoriesFromSpecificPatient) {
         // TODO Auto-generated constructor stub
         result=iconesNameList;
         context=activity=patientActivity;
         imageId=iconesImages;
         this.patientEmail=patientEmail;
+        this.patientFirstName=patientFirstName;
+        this.patientLastName=patientLastName;
+        this.relativeMemoriesFromSpecificPatient=relativeMemoriesFromSpecificPatient;
         inflater = ( LayoutInflater )context.
                 getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
@@ -133,6 +139,14 @@ public class CustomPatientActivityAdapter extends BaseAdapter {
                 if (result[position].equals(some_array[1])) {
 
                     Log.e("***********","memories button pressed");
+                    Log.e("^^^^^^^", patientEmail);
+
+                    Intent intent=new Intent(context, MutualMemoryActivity.class);
+                    intent.putExtra("patientEmail",patientEmail);
+                    intent.putExtra("patientFirstName",patientFirstName);
+                    intent.putExtra("patientLastName",patientLastName);
+                    intent.putExtra("type",IS_RELATIVE);
+                    context.startActivity(intent);
 
 
                 }

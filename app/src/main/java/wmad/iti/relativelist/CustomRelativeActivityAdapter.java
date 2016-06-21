@@ -1,6 +1,8 @@
 package wmad.iti.relativelist;
 
 import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,21 +11,31 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import wmad.iti.MutualMemories.MutualMemoryActivity;
 import wmad.iti.dto.Relative;
 import wmad.iti.irememeber.R;
+import wmad.iti.memories.MemoryActivity;
 
 /**
  * Created by Doaa on 5/29/2016.
  */
 public class CustomRelativeActivityAdapter extends BaseAdapter {
+    public static final int IS_PATIENT = 90900;
     String [] result;
     Context context;
     int [] imageId;
+    String relativeFirstName,relativeLastName,relativeEmail;
+
     private static LayoutInflater inflater=null;
-    public CustomRelativeActivityAdapter(RelativeActivity relativeActivity, String[] iconesNameList, int[] iconesImages) {
+    public CustomRelativeActivityAdapter(RelativeActivity relativeActivity, String[] iconesNameList, int[] iconesImages
+    ,String relativeFirstName,String relativeLastName,String relativeEmail) {
         // TODO Auto-generated constructor stub
         result=iconesNameList;
         context=relativeActivity;
+        this.relativeFirstName=relativeFirstName;
+        this.relativeLastName=relativeLastName;
+        this.relativeEmail=relativeEmail;
+        Log.i("relativeEmailIntent",relativeEmail+"CustomRelativeActivityAdapter");
         imageId=iconesImages;
         inflater = ( LayoutInflater )context.
                 getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -81,6 +93,17 @@ public class CustomRelativeActivityAdapter extends BaseAdapter {
                 if (result[position].equals(some_array[1])) {
                     RelativeActivity.instance().sendSMSMessage();
                 }
+                if (result[position].equals(some_array[2])) {
+                    Intent intent=new Intent(context,MutualMemoryActivity.class);
+                    intent.putExtra("relativeFirstName",relativeFirstName);
+                    Log.e("teee",relativeFirstName);
+                    intent.putExtra("relativeLastName",relativeLastName);
+                    intent.putExtra("relativeEmail",relativeEmail);
+                    intent.putExtra("type",IS_PATIENT);
+
+                    context.startActivity(intent);
+                }
+
 
             }
         });

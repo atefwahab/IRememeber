@@ -1,4 +1,4 @@
-package wmad.iti.memories;
+package wmad.iti.MutualMemories;
 
 import android.annotation.TargetApi;
 import android.app.ProgressDialog;
@@ -13,6 +13,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -33,8 +34,6 @@ import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -43,13 +42,19 @@ import java.util.HashMap;
 import wmad.iti.constants.Urls;
 import wmad.iti.dto.Memory;
 import wmad.iti.dto.Status;
+import wmad.iti.irememeber.PatientHomeActivity;
 import wmad.iti.irememeber.R;
+import wmad.iti.irememeber.RelativeHomeActivity;
+import wmad.iti.memories.MemoryActivity;
 import wmad.iti.model.ConnectionDetector;
 import wmad.iti.model.GsonRequest;
 import wmad.iti.model.MySingleton;
 import wmad.iti.model.SharedPreferenceManager;
+import wmad.iti.patentlist.CustomPatientActivityAdapter;
+import wmad.iti.relativelist.CustomRelativeActivityAdapter;
+import wmad.iti.util.Validator;
 
-public class WriteTextActivity extends AppCompatActivity {
+public class MutualMemoryWriteTextActivity extends AppCompatActivity {
     private Context contextForDialog = null;
     RequestQueue requestQueue;
     GsonRequest gsonRequest;
@@ -62,6 +67,8 @@ public class WriteTextActivity extends AppCompatActivity {
     File photoFile = null;
     String mCurrentPhotoPath;
     String imagePath = null;
+    // input Layout
+   // TextInputLayout textInputLayout;
 
     private static final int REQUEST_CAMERA = 209;
     private static final int REQUEST_GALLERY = 151;
@@ -69,9 +76,8 @@ public class WriteTextActivity extends AppCompatActivity {
     int positionIntent;
     Memory memoryIntent;
     ImageLoader mImageLoader;
-    String patientEmailIntent;
+    String patientEmailIntent, relativeEmailIntent;
     ConnectionDetector connectionDetector;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -79,8 +85,9 @@ public class WriteTextActivity extends AppCompatActivity {
         contextForDialog = this;
         setContentView(R.layout.activity_write_text);
 
-        //btnSave= (Button) findViewById(R.id.saveButton);
+
         textEditMemory = (EditText) findViewById(R.id.writeMemoryText);
+      //  textInputLayout = (TextInputLayout) findViewById(R.id.inputLayoutWriteMemory);
         takenImg = (ImageView) findViewById(R.id.imagetaken);
         Toolbar toolbar = (Toolbar) findViewById(R.id.memory);
         setSupportActionBar(toolbar);
@@ -95,14 +102,16 @@ public class WriteTextActivity extends AppCompatActivity {
             }
         });
 
-        patientEmailIntent = getIntent().getStringExtra("patientEmail");
-
 
         positionIntent = getIntent().getIntExtra("position", 1000);
         memoryIntent = getIntent().getParcelableExtra("memory");
-
+        patientEmailIntent = getIntent().getStringExtra("patientEmail");
+        relativeEmailIntent = getIntent().getStringExtra("relativeEmail");
+        Log.i("relativeinWrite",relativeEmailIntent+" write");
 
         final int flag = getIntent().getIntExtra("flag", 0);
+
+
         Log.i("flag", flag + "-->flag");
 
         switch (flag) {
@@ -132,32 +141,16 @@ public class WriteTextActivity extends AppCompatActivity {
                     if (textEditMemory.getText().length() < 400) {
                         uploadPicture();
                     }
-                    if (textEditMemory.getText().length() > 400) {
+                    if ( textEditMemory.getText().length() > 400) {
                         showDialog(getResources().getString(R.string.maxChar));
                     }
                 }
 
                 //Case text
-                if (flag == 2) {
+                if(flag==2) {
                     if (textEditMemory.getText().length() != 0 && textEditMemory.getText().length() < 400) {
-                        saveMemoryTextVolleyRequest();
-                        goToMemoryActivity();
-                    }
-                    if (textEditMemory.getText().length() > 400) {
-                        showDialog(getResources().getString(R.string.maxChar));
-                    }
-                    if (textEditMemory.getText().length() == 0) {
+                        saveMemoryTextVolleyRequest(findViewById(android.R.id.content));
 
-                        showDialog(getResources().getString(R.string.nullText));
-                    }
-
-                }
-
-                //case edit
-                if (flag == 3) {
-                    if (textEditMemory.getText().length() != 0 && textEditMemory.getText().length() < 400) {
-                        editTextMemory(positionIntent);
-                        goToMemoryActivity();
                     }
                     if ( textEditMemory.getText().length() > 400) {
                         showDialog(getResources().getString(R.string.maxChar));
@@ -166,32 +159,59 @@ public class WriteTextActivity extends AppCompatActivity {
 
                         showDialog(getResources().getString(R.string.nullText));
                     }
+
+                }
+                //case edit
+                if (flag == 3) {
+                    if (textEditMemory.getText().length() != 0 && textEditMemory.getText().length() < 400) {
+                        editTextMemory(positionIntent);
+
+                    }
+                    if ( textEditMemory.getText().length() > 400) {
+                        showDialog(getResources().getString(R.string.maxChar));
+                    }
+                    if ( textEditMemory.getText().length() == 0) {
+
+                        showDialog(getResources().getString(R.string.nullText));
+                    }
+
+
                 }
 
-            }
 
+            }
         });
     }
-
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
     }
 
-    public void saveMemoryTextVolleyRequest() {
+    public void saveMemoryTextVolleyRequest(View view) {
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        String currentDateandTime = simpleDateFormat.format(new Date());
+
+        HashMap<String, String> header = new HashMap<>();
         //to test connectivity of internet
         connectionDetector = new ConnectionDetector(getApplicationContext());
         Boolean isInternetPresent = connectionDetector.isConnectingToInternet();
         //if there is internet connection
         if (isInternetPresent == true) {
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-            String currentDateandTime = simpleDateFormat.format(new Date());
+            Log.i("type here", String.valueOf(getIntent().getIntExtra("type", 0))+" type");
+            //to check if patient enter edit memories at specific relative to get mutual memories
+            if (getIntent().getIntExtra("type", 0) == CustomRelativeActivityAdapter.IS_PATIENT) {
+                Log.i("type here2", String.valueOf(getIntent().getIntExtra("type", 0)));
+                header.put("patientEmail", SharedPreferenceManager.getUser(getApplicationContext()).getEmail());
+                header.put("relativeEmail", relativeEmailIntent);
 
-            Log.i("enter save memory", "memory");
-            HashMap<String, String> header = new HashMap<>();
-            header.put("patientEmail", SharedPreferenceManager.getUser(getApplicationContext()).getEmail());
-            header.put("relativeEmail", null);
+            }
+            //  to check if relative enter edit memories at specific patient to get mutual memories
+            if (getIntent().getIntExtra("type", 0) == CustomPatientActivityAdapter.IS_RELATIVE) {
+                header.put("patientEmail", patientEmailIntent);
+                header.put("relativeEmail", SharedPreferenceManager.getUser(getApplicationContext()).getEmail());
+            }
             header.put("text", textEditMemory.getText().toString());
             header.put("date", currentDateandTime);
 
@@ -207,28 +227,36 @@ public class WriteTextActivity extends AppCompatActivity {
 
                     status.getMessage();
                     Log.i("on Response ", status.getMessage());
-                    if (status.getStatus() == 1) {
-                        Toast.makeText(getApplicationContext(), getResources().getString(R.string.saveMemory), Toast.LENGTH_LONG).show();
+                //    Toast.makeText(getApplicationContext(), status.getMessage(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(),getResources().getString(R.string.postMemory), Toast.LENGTH_LONG).show();
+
+                    if (getIntent().getIntExtra("type", 0) == CustomPatientActivityAdapter.IS_RELATIVE) {
+                        goToRelativeHomeActivity();
                     }
-                    if (status.getStatus() == 0) {
-                        Toast.makeText(getApplicationContext(), getResources().getString(R.string.failedMessage), Toast.LENGTH_LONG).show();
+                    if (getIntent().getIntExtra("type", 0) == CustomRelativeActivityAdapter.IS_PATIENT) {
+                        goToPatientHomeActivity();
                     }
                 }
 
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError volleyError) {
-                    Log.i("onErrorResponse: ", volleyError.getMessage());
+                    Log.i("onErrorResponse: ", volleyError.toString());
                 }
             });
 
 
             //Adding request to the queue
             requestQueue.add(gsonRequest);
+
+
         } else {
-            Toast.makeText(getApplicationContext(), getResources().getString(R.string.no_internt_msg), Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(),getResources().getString(R.string.no_internt_msg), Toast.LENGTH_LONG).show();
         }
+
     }
+
+
 
     /**
      * this method is used to select image using AlertDialoge
@@ -395,34 +423,81 @@ public class WriteTextActivity extends AppCompatActivity {
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
             final String currentDateandTime = simpleDateFormat.format(new Date());
             final ProgressDialog loading = ProgressDialog.show(this, "Uploading...", "Please wait...", false, false);
-            Ion.with(getApplicationContext())
-                    .load(Urls.MEMORY_IMAGE_UPLOAD_URL).setLogging("UPLOAD LOGS", Log.DEBUG)
-                    .setMultipartParameter("date", currentDateandTime)
-                    .setMultipartParameter("text", textEditMemory.getText().toString())
-                    .setMultipartParameter("patientEmail", SharedPreferenceManager.getUser(getApplicationContext()).getEmail())
-                    .setMultipartParameter("relativeEmail", null)
-                    .setMultipartFile("file", "application/zip", new File(imagePath)).asJsonObject().setCallback(new FutureCallback<JsonObject>() {
-                @Override
-                public void onCompleted(Exception e, JsonObject result) {
-                    if (e != null) {
-                        e.printStackTrace();
-                    }
-                    loading.dismiss();
-                    Log.i("completed", "completed");
-
-                    if (result != null) {
-
-                        Log.i("success", result.get("message").getAsString());
-                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-                        String currentDateandTime = simpleDateFormat.format(new Date());
+            Log.i("relativeFunc", relativeEmailIntent + " func");
+            if (getIntent().getIntExtra("type", 0) == CustomRelativeActivityAdapter.IS_PATIENT) {
+                Ion.with(getApplicationContext())
+                        .load(Urls.MEMORY_IMAGE_UPLOAD_URL).setLogging("UPLOAD LOGS", Log.DEBUG)
+                        .setMultipartParameter("date", currentDateandTime)
+                        .setMultipartParameter("text", textEditMemory.getText().toString())
+                        .setMultipartParameter("patientEmail", SharedPreferenceManager.getUser(getApplicationContext()).getEmail())
+                        .setMultipartParameter("relativeEmail", relativeEmailIntent)
+                        .setMultipartFile("file", "application/zip", new File(imagePath)).asJsonObject().setCallback(new FutureCallback<JsonObject>() {
+                    @Override
+                    public void onCompleted(Exception e, JsonObject result) {
+                        if (e != null) {
+                            e.printStackTrace();
+                        }
                         loading.dismiss();
-                        goToMemoryActivity();
+                        Log.i("completed", "completed");
 
+                        if (result != null) {
+
+                            Log.i("success", result.get("message").getAsString());
+                            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+                            String currentDateandTime = simpleDateFormat.format(new Date());
+                            loading.dismiss();
+                            if (getIntent().getIntExtra("type", 0) == CustomPatientActivityAdapter.IS_RELATIVE) {
+                                Toast.makeText(getApplicationContext(),getResources().getString(R.string.imageUploaded),Toast.LENGTH_LONG).show();
+                                goToRelativeHomeActivity();
+                            }
+                            if (getIntent().getIntExtra("type", 0) == CustomRelativeActivityAdapter.IS_PATIENT) {
+                                Toast.makeText(getApplicationContext(),getResources().getString(R.string.imageUploaded),Toast.LENGTH_LONG).show();
+                                goToPatientHomeActivity();
+                            }
+
+                        }
                     }
-                }
-            });
-        } else {
-            Toast.makeText(getApplicationContext(), getResources().getString(R.string.no_internt_msg), Toast.LENGTH_LONG).show();
+                });
+            }
+            if (getIntent().getIntExtra("type", 0) == CustomPatientActivityAdapter.IS_RELATIVE) {
+                Ion.with(getApplicationContext())
+                        .load(Urls.MEMORY_IMAGE_UPLOAD_URL).setLogging("UPLOAD LOGS", Log.DEBUG)
+                        .setMultipartParameter("date", currentDateandTime)
+                        .setMultipartParameter("text", textEditMemory.getText().toString())
+                        .setMultipartParameter("patientEmail", patientEmailIntent)
+                        .setMultipartParameter("relativeEmail", SharedPreferenceManager.getUser(getApplicationContext()).getEmail())
+                        .setMultipartFile("file", "application/zip", new File(imagePath)).asJsonObject().setCallback(new FutureCallback<JsonObject>() {
+                    @Override
+                    public void onCompleted(Exception e, JsonObject result) {
+                        if (e != null) {
+                            e.printStackTrace();
+                        }
+                        loading.dismiss();
+                        Log.i("completed", "completed");
+
+                        if (result != null) {
+
+                            Log.i("success", result.get("message").getAsString());
+                            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+                            String currentDateandTime = simpleDateFormat.format(new Date());
+                            loading.dismiss();
+                            if (getIntent().getIntExtra("type", 0) == CustomPatientActivityAdapter.IS_RELATIVE) {
+                                Toast.makeText(getApplicationContext(),getResources().getString(R.string.imageUploaded),Toast.LENGTH_LONG).show();
+                                goToRelativeHomeActivity();
+                            }
+                            if (getIntent().getIntExtra("type", 0) == CustomRelativeActivityAdapter.IS_PATIENT) {
+                                Toast.makeText(getApplicationContext(),getResources().getString(R.string.imageUploaded),Toast.LENGTH_LONG).show();
+                                goToPatientHomeActivity();
+                            }
+
+                        }
+                    }
+                });
+
+            }
+        }//end if--> there is internet
+        else{
+            Toast.makeText(getApplicationContext(),getResources().getString(R.string.no_internt_msg),Toast.LENGTH_LONG).show();
         }
     }
 
@@ -477,11 +552,17 @@ public class WriteTextActivity extends AppCompatActivity {
 
                 @Override
                 public void onResponse(Status status) {
-                    if (status.getStatus() == 1) {
-                        Toast.makeText(getApplicationContext(), getResources().getString(R.string.editMemory), Toast.LENGTH_LONG).show();
+
+                   // Toast.makeText(getApplicationContext(), status.getMessage(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(),getResources().getString(R.string.editMemory), Toast.LENGTH_LONG).show();
+                    Log.i("^^^_^^^^",(getIntent().getIntExtra("type", 0)+"^_^"));
+                    if (getIntent().getIntExtra("type", 0) == CustomPatientActivityAdapter.IS_RELATIVE) {
+                        goToRelativeHomeActivity();
+
                     }
-                    if (status.getStatus() == 0) {
-                        Toast.makeText(getApplicationContext(), getResources().getString(R.string.failedMessage), Toast.LENGTH_LONG).show();
+                    if (getIntent().getIntExtra("type", 0) == CustomRelativeActivityAdapter.IS_PATIENT) {
+                        goToPatientHomeActivity();
+
                     }
 
                 }
@@ -501,8 +582,8 @@ public class WriteTextActivity extends AppCompatActivity {
 
             //Adding request to the queue
             requestQueue.add(gsonRequest);
-        } else {
-            Toast.makeText(getApplicationContext(), getResources().getString(R.string.no_internt_msg), Toast.LENGTH_LONG).show();
+        }else{
+            Toast.makeText(getApplicationContext(),getResources().getString(R.string.no_internt_msg),Toast.LENGTH_LONG).show();
         }
     }
 
@@ -513,14 +594,23 @@ public class WriteTextActivity extends AppCompatActivity {
      */
 
     public void showDialog(String message) {
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(WriteTextActivity.this);
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(MutualMemoryWriteTextActivity.this);
 
         alertDialog.setTitle("Warning");
         alertDialog.setMessage(message);
         alertDialog.setPositiveButton("CANCEL", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-                Intent intent = new Intent(getApplicationContext(), MemoryActivity.class);
-                startActivity(intent);
+
+                if (getIntent().getIntExtra("type", 0) == CustomPatientActivityAdapter.IS_RELATIVE) {
+                    Intent intent = new Intent(getApplicationContext(), RelativeHomeActivity.class);
+                    startActivity(intent);
+                }
+                if(getIntent().getIntExtra("type", 0) == CustomRelativeActivityAdapter.IS_PATIENT){
+                    Intent intent = new Intent(getApplicationContext(), PatientHomeActivity.class);
+                    startActivity(intent);
+                }
+
+
             }
         });
 
@@ -536,15 +626,29 @@ public class WriteTextActivity extends AppCompatActivity {
 
     }
 
-
     /**
-     * this is used to go to memory Activity
+     * this is used to go to mutual memory Activity
      */
-    private void goToMemoryActivity() {
-        Intent intent = new Intent(getApplicationContext(), MemoryActivity.class);
+    private void goToMutualMemoryActivity() {
+        Intent intent = new Intent(getApplicationContext(), MutualMemoryActivity.class);
+        startActivity(intent);
+        this.finish();
+    }
+    /**
+     * this is used to go to patient home Activity
+     */
+    private void goToPatientHomeActivity() {
+        Intent intent = new Intent(getApplicationContext(), PatientHomeActivity.class);
         startActivity(intent);
         this.finish();
     }
 
-
+    /**
+     * This method is used to go to relative home activity
+     */
+    private void goToRelativeHomeActivity() {
+        Intent intent=new Intent(this, RelativeHomeActivity.class);
+        startActivity(intent);
+        this.finish();
+    }
 }

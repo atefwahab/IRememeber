@@ -10,17 +10,6 @@
     tools:context="wmad.iti.personalprofile.RlativeProfileActivity"
     tools:showIn="@layout/activity_memory">
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/scrollView"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:scrollbars="vertical"
-        android:smoothScrollbar="true"
-        android:scrollingCache="false"
-        android:animationCache="false">
-
 
     <!--here where the scrolling will start-->
     <LinearLayout
@@ -47,10 +36,11 @@
     android:id="@+id/recyclerView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+       android:layout_marginTop="10dp"
        />
 
 </LinearLayout>
     </LinearLayout>
-    </ScrollView>
+
 
     </RelativeLayout>

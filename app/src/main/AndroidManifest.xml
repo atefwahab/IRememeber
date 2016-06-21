@@ -21,6 +21,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
+        android:largeHeap="true"
         android:allowBackup="true"
         android:icon="@mipmap/logo"
         android:label="@string/app_name"
@@ -114,6 +115,12 @@
         <service
             android:name=".ShareLocationService"
             android:exported="false"></service>
+
+        <activity android:name="wmad.iti.MutualMemories.MutualMemoryWriteTextActivity"
+            android:theme="@style/MaterialTheme"/>
+        <activity android:name="wmad.iti.MutualMemories.MutualMemoryActivity"
+            android:theme="@style/MaterialTheme"/>
+
 
         <activity
             android:name=".ReceiveOpenGpsRequestActivity"

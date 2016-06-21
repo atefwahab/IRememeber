@@ -21,7 +21,7 @@ import wmad.iti.model.MySingleton;
 public class PatientActivity extends AppCompatActivity {
     TextView locationTextView;
     CircularImageView circularImageView;
-    String patientFirstName,patientLastName,imageUrl,patientEmail;
+    String patientFirstName,patientLastName,imageUrl,patientEmail,relativeMemoriesFromSpecificPatient;
     Toolbar toolbar;
     GridView gridView;
     int[] iconsImages;
@@ -35,6 +35,7 @@ public class PatientActivity extends AppCompatActivity {
         patientFirstName=getIntent().getStringExtra("patientFirstName");
         patientLastName=getIntent().getStringExtra("patientLastName");
         imageUrl=getIntent().getStringExtra("imageUrl");
+        relativeMemoriesFromSpecificPatient=getIntent().getStringExtra("relativeEditMemoriesFromSpecificPatient");
         // Atef added this code ...
         patientEmail= getIntent().getStringExtra("patientEmail");
         Log.e("patient Email 1",patientEmail);
@@ -56,7 +57,8 @@ public class PatientActivity extends AppCompatActivity {
         gridView = (GridView) findViewById(R.id.gridView1);
         iconsImages = new int[]{R.drawable.location, R.drawable.add_memory};
         iconTitles = getResources().getStringArray(R.array.patient_activity_arr);
-        gridView.setAdapter(new CustomPatientActivityAdapter(this, iconTitles, iconsImages,patientEmail));
+        gridView.setAdapter(new CustomPatientActivityAdapter(this, iconTitles, iconsImages,patientEmail,patientFirstName,patientLastName,
+                relativeMemoriesFromSpecificPatient));
     }
     @Override
     public void onBackPressed() {

@@ -3,10 +3,12 @@ package wmad.iti.model;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import java.sql.Date;
 import java.util.ArrayList;
 
+import wmad.iti.dto.Memory;
 import wmad.iti.dto.Relative;
 import wmad.iti.dto.User;
 
@@ -19,6 +21,7 @@ public abstract class SharedPreferenceManager {
     public static final Date user_date = new Date(1993,20,9);
     public static final String GET_PATIENTS_SHARED_PREFRENCE = "getPatientsSharedPrefrence";
     public static final String GET_RELATIVES_SHARED_PREFRENCE = "getRelativesSharedPrefrence";
+    public static final String GET_MEMORIES_SHARED_PREFRENCE = "getMemoriesSharedPrefrence";
 
     /**
      * Author Nihal
@@ -192,7 +195,7 @@ public abstract class SharedPreferenceManager {
         ArrayList<User> users =new ArrayList<>();
 
         // 1 - check shared has count wla la2
-        SharedPreferences sharedPreferences = context.getSharedPreferences(GET_PATIENTS_SHARED_PREFRENCE,Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = context.getSharedPreferences(GET_PATIENTS_SHARED_PREFRENCE, Context.MODE_PRIVATE);
         // 2 - get int count ..
         if(sharedPreferences.contains("count")){
 
@@ -265,7 +268,7 @@ public abstract class SharedPreferenceManager {
         ArrayList<Relative> relatives =new ArrayList<>();
 
         // 1 - check shared has count wla la2
-        SharedPreferences sharedPreferences = context.getSharedPreferences(GET_RELATIVES_SHARED_PREFRENCE,Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = context.getSharedPreferences(GET_RELATIVES_SHARED_PREFRENCE, Context.MODE_PRIVATE);
         // 2 - get int count ..
         if(sharedPreferences.contains("count")){
 
@@ -306,7 +309,7 @@ public abstract class SharedPreferenceManager {
      */
     public  static String getToken(Context context){
         SharedPreferences sharedPreferences= PreferenceManager.getDefaultSharedPreferences(context);
-        String token=sharedPreferences.getString("Token","");
+        String token=sharedPreferences.getString("Token", "");
 
         if (token.equals("")){
             return null;
@@ -336,4 +339,106 @@ public abstract class SharedPreferenceManager {
         return macAddress;
     }
 
+    /**
+     * Author Doaa
+     * This method is used to cache memories
+     * @param context
+     * @param memory
+     * @return
+     */
+
+    public static boolean saveMemories(Context context, Memory[] memory) {
+
+        int count=0;
+
+        // to get the shared preference
+        SharedPreferences sharedPreferences = context.getSharedPreferences(GET_MEMORIES_SHARED_PREFRENCE, Context.MODE_PRIVATE);
+
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        for (int i = 0; i < memory.length; i++) {
+
+            count++;
+
+            editor.putInt("memoryId" + count, memory[i].getMemoryId());
+
+            editor.putString("memoryText" + count, memory[i].getMemoryText());
+
+            editor.putString("imageUrl" + count, memory[i].getImageUrl());
+
+            editor.putString("videoUrl" + count, memory[i].getVideo_url());
+
+            editor.putString("dateTime" + count, memory[i].getDateTime());
+
+            editor.putString("longitude" + count, String.valueOf(memory[i].getLongitude()));
+
+            editor.putString("latitude" + count, String.valueOf(memory[i].getLatitude()));
+
+            editor.putString("address"+count, memory[i].getAddress());
+
+            editor.putString("city"+count,memory[i].getCity());
+
+            editor.putString("country"+count,memory[i].getCountry());
+
+
+
+        }
+        editor.putInt("count",count);
+
+        return  editor.commit();
+    }
+
+    /**
+     * Author Doaa
+     * This method is used to get all memories cached
+     * @param context
+     * @return
+     */
+    public static ArrayList<Memory> getMemories(Context context) {
+        int count=0;
+        int numofKey=0;
+        ArrayList<Memory> memories =new ArrayList<>();
+
+        SharedPreferences sharedPreferences = context.getSharedPreferences(GET_MEMORIES_SHARED_PREFRENCE, Context.MODE_PRIVATE);
+
+        if(sharedPreferences.contains("count")){
+
+            count=sharedPreferences.getInt("count", 0);
+
+
+            for(int i=0;i<count;i++){
+
+                numofKey++;
+
+                int memoryId=sharedPreferences.getInt("memoryId" + numofKey, 0);
+                String memoryText =sharedPreferences.getString("memoryText" + numofKey, "");
+                String imageUrl=sharedPreferences.getString("imageUrl" + numofKey, "");
+                String videoUrl=sharedPreferences.getString("videoUrl"+numofKey,"");
+                String dateTime=sharedPreferences.getString("dateTime"+numofKey,"");
+                Double longitude=Double.parseDouble(sharedPreferences.getString("longitude" + numofKey, ""));
+                Double latitude=Double.parseDouble(sharedPreferences.getString("latitude" + numofKey, ""));
+                String address=sharedPreferences.getString("address" + numofKey, "");
+                String city=sharedPreferences.getString("city" + numofKey, "");
+                String country=sharedPreferences.getString("country"+numofKey,"");
+
+                Memory memory = new Memory();
+                memory.setMemoryId(memoryId);
+                memory.setMemoryText(memoryText);
+                memory.setImageUrl(imageUrl);
+                memory.setVideo_url(videoUrl);
+                memory.setDateTime(dateTime);
+                memory.setLongitude(longitude);
+                memory.setLatitude(latitude);
+                memory.setAddress(address);
+                memory.setCity(city);
+                memory.setCountry(country);
+                memories.add(memory);
+
+                Log.i("memoryId",memoryId+"");
+                Log.i("memorytext",memoryText+"memorytext");
+            }
+        }
+
+        return memories;
+
+    }
 }

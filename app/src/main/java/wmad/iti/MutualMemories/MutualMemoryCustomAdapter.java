@@ -1,11 +1,9 @@
-package wmad.iti.memories;
+package wmad.iti.MutualMemories;
 
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
-import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,7 +22,6 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
-import com.facebook.drawee.view.SimpleDraweeView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -36,15 +33,18 @@ import wmad.iti.dto.Memory;
 import wmad.iti.dto.Status;
 import wmad.iti.dto.User;
 import wmad.iti.irememeber.R;
+import wmad.iti.memories.WriteTextActivity;
 import wmad.iti.model.ConnectionDetector;
 import wmad.iti.model.GsonRequest;
 import wmad.iti.model.MySingleton;
 import wmad.iti.model.SharedPreferenceManager;
+import wmad.iti.patentlist.CustomPatientActivityAdapter;
+import wmad.iti.relativelist.CustomRelativeActivityAdapter;
 
 /**
  * Created by dr-ali on 01/06/2016.
  */
-public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder> {
+public class MutualMemoryCustomAdapter extends RecyclerView.Adapter<MutualMemoryCustomAdapter.ViewHolder> {
     private static final String TAG = "CustomAdapter";
     Context context;
     ImageLoader mImageLoader;
@@ -57,11 +57,20 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
     User user;
     ConnectionDetector connectionDetector;
     Boolean isInternetPresent;
+    String  secondFirstName, secondLastName;
+    int type;
 
-    public CustomAdapter(ArrayList<Memory> memories, Context context) {
+
+    public MutualMemoryCustomAdapter(ArrayList<Memory> memories, Context context,
+
+             String secondFirstName, String secondLastName, int type) {
 
         this.memories = memories;
         this.context = context;
+
+        this.secondFirstName = secondFirstName;
+        this.secondLastName= secondLastName;
+        this.type=type;
         //to checck connection to internet to delete patient
         connectionDetector = new ConnectionDetector(context);
         isInternetPresent = connectionDetector.isConnectingToInternet();
@@ -76,9 +85,8 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
 
     public class MemoryViewHolder extends ViewHolder {
         TextView name, date, arrow, postTxt, relativeName, with;
-        ImageView profileImg, imageFirstCardProfile;
+        ImageView profileImg, postImg, imageFirstCardProfile;
         private PopupMenu popupMenu;
-        SimpleDraweeView postImg;
         int position;
         LinearLayout layoutTextMemory, layoutPhotoMemory;
 
@@ -88,7 +96,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
             name = (TextView) v.findViewById(R.id.name);
             date = (TextView) v.findViewById(R.id.date);
             profileImg = (ImageView) v.findViewById(R.id.first);
-            postImg = (SimpleDraweeView) v.findViewById(R.id.imagePost);
+            postImg = (ImageView) v.findViewById(R.id.imagePost);
             arrow = (TextView) v.findViewById(R.id.draw);
             postTxt = (TextView) v.findViewById(R.id.txt1);
             layoutPhotoMemory = (LinearLayout) v.findViewById(R.id.layoutPhotoMemory);
@@ -143,11 +151,12 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
                                 if (isInternetPresent) {
                                     int flag = 3;
                                     Memory memoryIntent = memories.get(position);
-                                    Intent intent = new Intent(context, WriteTextActivity.class);
+                                    Intent intent = new Intent(context, MutualMemoryWriteTextActivity.class);
 
                                     intent.putExtra("memory", memoryIntent);
                                     intent.putExtra("flag", flag);
                                     intent.putExtra("position", positionofMemory);
+                                    intent.putExtra("type",type);
                                     context.startActivity(intent);
                                     return true;
                                 } else {
@@ -200,15 +209,12 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
         View v = LayoutInflater.from(viewGroup.getContext())
                 .inflate(R.layout.third_card, viewGroup, false);
 
-
         return new MemoryViewHolder(v);
 
     }
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, final int position) {
-
-
         Log.i("size", ">> " + memories.size());
         memory = memories.get(position);
         Log.i("dataImage: ", memory.getImageUrl());
@@ -220,7 +226,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
             holder.postImg.setVisibility(View.GONE);
             holder.layoutPhotoMemory.setVisibility(View.GONE);
             holder.layoutTextMemory.setVisibility(View.VISIBLE);
-            Log.i("urlmemory", memory.getImageUrl() + " memory");
+           // Log.i("urlmemory", memory.getImageUrl() + " memory");
             holder.postTxt.setText(memory.getMemoryText());
             holder.date.setText(memory.getDateTime());
         } else
@@ -233,10 +239,8 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
                 holder.date.setText(memory.getDateTime());
                 holder.postTxt.setText(memory.getMemoryText());
                 // Log.i("urlmemory2", memory.getImageUrl() + " memory");
-//                mImageLoader = MySingleton.getInstance(context).getImageLoader();
-//                mImageLoader.get(memory.getImageUrl(), ImageLoader.getImageListener(holder.postImg, R.drawable.camera48, R.drawable.add_memory));
-                Uri uri = Uri.parse(memory.getImageUrl());
-                holder.postImg.setImageURI(uri);
+                mImageLoader = MySingleton.getInstance(context).getImageLoader();
+                mImageLoader.get(memory.getImageUrl(), ImageLoader.getImageListener(holder.postImg, 0, 0));
             } else
                 //photo
                 if (!memory.getImageUrl().equals(Urls.IMAGE_MEMORY_NULL) && memory.getMemoryText().equals("")) {
@@ -245,30 +249,31 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
                     holder.layoutTextMemory.setVisibility(View.GONE);
                     holder.postTxt.setVisibility(View.GONE);
                     holder.date.setText(memory.getDateTime());
-//                    mImageLoader = MySingleton.getInstance(context).getImageLoader();
-//                    mImageLoader.get(memory.getImageUrl(), ImageLoader.getImageListener(holder.postImg, 0, 0));
-//                    Log.i("urlmemory", memory.getImageUrl() + " memory");
-                    Uri uri = Uri.parse(memory.getImageUrl());
-                    holder.postImg.setImageURI(uri);
+                    mImageLoader = MySingleton.getInstance(context).getImageLoader();
+                    mImageLoader.get(memory.getImageUrl(), ImageLoader.getImageListener(holder.postImg, 0, 0));
+                    Log.i("urlmemory", memory.getImageUrl() + " memory");
                 }
 
-        if (memory.getRelative() != null) {
-            Log.i("memoryContainRelative", memory.getRelative().getFirstName() + " relative");
-            holder.name.setText(" " + SharedPreferenceManager.getUser(context).getFirstName() + " " + SharedPreferenceManager.getUser(context).getLastName() + " ");
-            // holder.with.setText("with");
+
+
+
+            holder.name.setText(SharedPreferenceManager.getUser(context).getFirstName() + " " + SharedPreferenceManager.getUser(context).getLastName()+" ");
+
             holder.with.setVisibility(View.VISIBLE);
-            holder.relativeName.setText(" " + memory.getRelative().getFirstName() + " " + memory.getRelative().getLastName());
-        }
-        if (memory.getRelative() == null) {
-            holder.with.setVisibility(View.GONE);
-            holder.name.setText(SharedPreferenceManager.getUser(context).getFirstName() + " " + SharedPreferenceManager.getUser(context).getLastName());
-        }
+           // holder.with.setText("with");
+
+            holder.relativeName.setText(" "+secondFirstName + " " + secondLastName);
+
+
+
+
+
         String imageUrl = SharedPreferenceManager.getUser(context).getImageUrl();
         mImageLoader = MySingleton.getInstance(context).getImageLoader();
         mImageLoader.get(imageUrl, ImageLoader.getImageListener(holder.profileImg, 0, 0));
 
 
-    }
+}
 
     /**
      * This method is used to remove patient row from patients list
@@ -307,17 +312,17 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
             @Override
             public void onResponse(Status status) {
                 if (status.getStatus() == 1) {
-                    Toast.makeText(context,context.getResources().getString(R.string.deleteMemory), Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, "REMOVED SUCCESSFULLY", Toast.LENGTH_LONG).show();
                 }
                 if (status.getStatus() == 0) {
-                    Toast.makeText(context,context.getResources().getString(R.string.failedMessage), Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, "FAILED", Toast.LENGTH_LONG).show();
                 }
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
 
-           //     Toast.makeText(context, "error Response => " + volleyError.getMessage(), Toast.LENGTH_LONG).show();
+                Toast.makeText(context, "error Response => " + volleyError.getMessage(), Toast.LENGTH_LONG).show();
 
 
             }
