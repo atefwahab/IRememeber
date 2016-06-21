@@ -43,4 +43,5 @@ public abstract class Urls {
 
     public final static String WEB_SERVICE_DISCONNECT_USER = "http://" + Urls.IP_ADDRESS + ":" + Urls.PORT_NUMBER + "/WebService/service/locationManager/disconnectUser";
     public final static String WEB_SERVICE_BROADCAST_LOCATION = "http://"+Urls.IP_ADDRESS+":"+Urls.PORT_NUMBER+"/WebService/service/locationManager/broadcastLocation";
+    public final static String WEB_SERVICE_STOP_SERVICE = "http://" + Urls.IP_ADDRESS + ":" + Urls.PORT_NUMBER + "/WebService/service/locationManager/stopService";
 }

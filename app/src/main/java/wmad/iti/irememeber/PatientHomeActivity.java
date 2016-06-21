@@ -130,6 +130,7 @@ public class PatientHomeActivity extends AppCompatActivity implements MyLisnterI
             case 6: //panic mode activity
                 Intent PanicIntent = new Intent(this, SplashScreen.class);
                 startActivity(PanicIntent);
+                //Panic Logic ..
                 break;
 
         }
