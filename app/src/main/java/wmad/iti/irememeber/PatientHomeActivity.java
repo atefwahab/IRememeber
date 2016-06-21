@@ -4,8 +4,6 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.content.Intent;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -47,7 +45,6 @@ public class PatientHomeActivity extends AppCompatActivity implements MyLisnterI
     Double latitude,longitude;
     String mapLabel;
     BluetoothAdapter mBluetoothAdapter;
-    MediaPlayer mMediaPlayer;
 
 
     static public PatientHomeActivity instance(){
@@ -59,16 +56,12 @@ public class PatientHomeActivity extends AppCompatActivity implements MyLisnterI
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_patient_home);
 
+
         /////////////////////////////////////////////////////////////////
         Intent i = new Intent(this,SendTokenToServerIntentService.class);
         startService(i);
         /////////////////////////////
-        Intent intent = new Intent(this,BluetoothServices.class);
-        startService(intent);
-        ////////////////////////
-        Intent intentReminde = new Intent(this,NotificationService.class);
-        startService(intentReminde);
-        ////////////////////
+
         user=SharedPreferenceManager.getUser(getApplicationContext());
         latitude = user.getLatitude();
         Log.i("latitude", String.valueOf(latitude));
@@ -77,7 +70,6 @@ public class PatientHomeActivity extends AppCompatActivity implements MyLisnterI
         mapLabel = getResources().getString(R.string.maplLabel);
         Log.i("the location -> ",mapLabel);
         inst=this;
-
         updateMacAddress();
         setUpRecyclerView();
     }
@@ -227,15 +219,5 @@ public class PatientHomeActivity extends AppCompatActivity implements MyLisnterI
             }
         });
         queue.add(jsonRequest);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
     }
 }

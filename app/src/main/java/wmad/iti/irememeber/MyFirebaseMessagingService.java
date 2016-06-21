@@ -41,6 +41,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private int REQUEST_CODE = 0;
     private final int LOCATION_REQUEST = 9393;
     private final int UPDATE_LOCATION = 4141;
+    final static int STOP_SERVICE = 5789;
 
     Bitmap relativeImage;
 
@@ -133,9 +134,20 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                     LocalBroadcastManager broadcaster = LocalBroadcastManager.getInstance(this);
                     Intent intent = new Intent(MapsActivity.broadcast_receiver);
 
+
                     intent.putExtra("disconnect", 1);
 
+
                     broadcaster.sendBroadcast(intent);
+                }
+                break;
+
+            // to stop the GPS Service
+            case STOP_SERVICE:
+                if (ShareLocationService.isStarted == true) {
+
+                    Intent stopServiceIntent = new Intent(this, ShareLocationService.class);
+                    stopService(stopServiceIntent);
                 }
                 break;
 

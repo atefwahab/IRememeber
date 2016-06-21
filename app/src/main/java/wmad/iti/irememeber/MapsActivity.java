@@ -12,6 +12,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageRequest;
@@ -23,11 +24,18 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.koushikdutta.async.http.Headers;
 
+import java.util.HashMap;
+
+import wmad.iti.constants.Urls;
+import wmad.iti.dto.Status;
+import wmad.iti.model.GsonRequest;
 import wmad.iti.model.MySingleton;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
+    private static final String TAG = "MAPS ACTIVITY";
     private GoogleMap mMap;
     private Marker marker;
     public static boolean isActive = false;
@@ -36,6 +44,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     LocalBroadcastManager localBroadcastManager;
     Bitmap patientImageMarker;
     String patientImage;
+    String patientEmail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +57,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         localBroadcastManager = LocalBroadcastManager.getInstance(getApplicationContext());
         isStarted = true;
+        patientEmail = getIntent().getStringExtra("patientEmail");
+        Log.e("Patient Email2", patientEmail);
     }
 
 
@@ -152,5 +163,55 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onStop() {
         super.onStop();
         isStarted = false;
+        // Stop service from patient side ..
+
+        HashMap<String, String> headers = new HashMap<>();
+        headers.put("patientEmail", patientEmail);
+        GsonRequest gsonRequest = new GsonRequest(Urls.WEB_SERVICE_STOP_SERVICE, Request.Method.POST, Status.class, headers, new Response.Listener<Status>() {
+            @Override
+            public void onResponse(Status response) {
+
+                Log.i(TAG, response.getMessage());
+            }
+        },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                        Log.i(TAG, error.toString());
+
+                    }
+                });
+        MySingleton.getInstance(this).addToRequestQueue(gsonRequest);
+    }
+
+
+    @Override
+    protected void onDestroy() {
+
+
+        Log.e("Patient Email2", patientEmail);
+        // Stop service from patient side ..
+
+        Log.e(TAG, "MAPS DESTROYED");
+        HashMap<String, String> headers = new HashMap<>();
+        headers.put("patientEmail", patientEmail);
+        GsonRequest gsonRequest = new GsonRequest(Urls.WEB_SERVICE_STOP_SERVICE, Request.Method.POST, Status.class, headers, new Response.Listener<Status>() {
+            @Override
+            public void onResponse(Status response) {
+
+                Log.i(TAG, response.getMessage());
+            }
+        },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                        Log.i(TAG, error.toString());
+
+                    }
+                });
+        MySingleton.getInstance(this).addToRequestQueue(gsonRequest);
+        super.onDestroy();
     }
 }

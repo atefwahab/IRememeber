@@ -5,9 +5,9 @@ package wmad.iti.constants;
  */
 public abstract class Urls {
     public final static String WEB_SERVICE_URL = "";
-//    public final static String IP_ADDRESS = "192.168.1.7";
-    public final static String IP_ADDRESS = "10.0.1.25";
-
+    //public final static String IP_ADDRESS = "192.168.1.3";
+    //public final static String IP_ADDRESS = "10.0.1.25";
+    public final static String IP_ADDRESS = "10.0.1.9";
     public final static String PORT_NUMBER = "8084";
     public final static String WEB_SERVICE_lOGIN_URL = "http://"+Urls.IP_ADDRESS+":"+Urls.PORT_NUMBER+"/WebService/service/login";
     public final static String WEB_SERVICE_REGISTER_URL = "http://"+Urls.IP_ADDRESS+":"+Urls.PORT_NUMBER+"/WebService/service/regist/register";
@@ -41,15 +41,7 @@ public abstract class Urls {
 
     public final static String WEB_SERVICE_MAC_ADDRESS_URL = "http://"+Urls.IP_ADDRESS+":"+Urls.PORT_NUMBER+"/WebService/service/login/mac";
 
-    public final static String WEB_SERVICE_BLUETOOTH_URL="http://"+Urls.IP_ADDRESS+":"+Urls.PORT_NUMBER+"/WebService/service/Bluetooth";
-
-    public final static String WEB_SERVICE_SET_TRUSTED_URL="http://"+Urls.IP_ADDRESS+":"+Urls.PORT_NUMBER+"/WebService/service/trust";
-//    public final static String WEB_SERVICE_CHECK_TRUSTED_URL="http://"+Urls.IP_ADDRESS+":"+Urls.PORT_NUMBER+"/WebService/service/trust/check";
-    public final static String WEB_SERVICE_REMOVE_TRUSTED_URL="http://"+Urls.IP_ADDRESS+":"+Urls.PORT_NUMBER+"/WebService/service/trust/remove";
-    public final static String WEB_SERVICE_GET_TRUSTED_URL="http://"+Urls.IP_ADDRESS+":"+Urls.PORT_NUMBER+"/WebService/service/trust/get";
-
     public final static String WEB_SERVICE_DISCONNECT_USER = "http://" + Urls.IP_ADDRESS + ":" + Urls.PORT_NUMBER + "/WebService/service/locationManager/disconnectUser";
     public final static String WEB_SERVICE_BROADCAST_LOCATION = "http://"+Urls.IP_ADDRESS+":"+Urls.PORT_NUMBER+"/WebService/service/locationManager/broadcastLocation";
-
-
+    public final static String WEB_SERVICE_STOP_SERVICE = "http://" + Urls.IP_ADDRESS + ":" + Urls.PORT_NUMBER + "/WebService/service/locationManager/stopService";
 }

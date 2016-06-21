@@ -50,10 +50,11 @@ public class ShareLocationService extends Service {
                 Log.i(TAG, "Location Latitude>>" + location.getLatitude());
 
                 RequestQueue queue = MySingleton.getInstance(getApplicationContext()).getRequestQueue();
-                HashMap<String,String> headers = new HashMap<>();
-                headers.put("relativeEmail",relativeEmail);
-                headers.put("longitude",String.valueOf(location.getLongitude()));
-                headers.put("latitude",String.valueOf(location.getLatitude()));
+                HashMap<String, String> headers = new HashMap<>();
+                headers.put("relativeEmail", relativeEmail);
+                headers.put("longitude", String.valueOf(location.getLongitude()));
+                headers.put("latitude", String.valueOf(location.getLatitude()));
+                headers.put("patientEmail", SharedPreferenceManager.getEmail(getApplicationContext()));
 
                 GsonRequest request = new GsonRequest(Urls.WEB_SERVICE_BROADCAST_LOCATION, Request.Method.POST, Status.class, headers,
                         new Response.Listener<Status>() {
@@ -65,7 +66,7 @@ public class ShareLocationService extends Service {
                         new Response.ErrorListener() {
                             @Override
                             public void onErrorResponse(VolleyError error) {
-                                Log.e(TAG,error.toString());
+                                Log.e(TAG, error.toString());
                             }
                         }
                 );
@@ -113,8 +114,6 @@ public class ShareLocationService extends Service {
     }
 
 
-
-
     /**
      *
      * @param intent  The Intent supplied to {@link Context#startService},
@@ -134,10 +133,10 @@ public class ShareLocationService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
 
         // log
-        Log.i(TAG,"Service Started ..");
+        Log.i(TAG, "Service Started ..");
         relativeEmail = intent.getStringExtra("relativeEmail");
-        Log.e(TAG,relativeEmail);
-        isStarted=true;
+        Log.e(TAG, relativeEmail);
+        isStarted = true;
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
         // Runtime Permission ..
@@ -178,7 +177,18 @@ public class ShareLocationService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.i(TAG,"Service destroyed ..");
+        Log.i(TAG, "Service destroyed ..");
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        locationManager.removeUpdates(locationListener);
         isStarted=false;
     }
 }

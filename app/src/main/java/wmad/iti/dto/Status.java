@@ -14,15 +14,6 @@ public class Status {
     int status;
     String message;
    User user;
-    Relative relative;
-
-    public Relative getRelative() {
-        return relative;
-    }
-
-    public void setRelative(Relative relative) {
-        this.relative = relative;
-    }
 
     public User getUser() {
         return user;

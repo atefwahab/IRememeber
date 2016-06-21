@@ -7,7 +7,6 @@
         android:required="true" />
 
     <uses-permission android:name="android.permission.BLUETOOTH" />
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.WRITE_SMS" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.SEND_SMS" />
@@ -20,8 +19,6 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-
 
     <application
         android:allowBackup="true"
@@ -61,6 +58,7 @@
             android:name="wmad.iti.patentlist.PatientActivity"
             android:theme="@style/MaterialTheme" />
 
+        <!--<meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyCvStzDK_pkyQhMGf-V9ouu1lfDiT7oxU4" />-->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
@@ -73,7 +71,7 @@
             android:theme="@style/MaterialTheme" />
         <activity
             android:name="wmad.iti.relativelist.RelativeActivity"
-            android:theme="@style/MaterialTheme" />
+            android:theme="@style/MaterialTheme"></activity>
         <activity
             android:name="wmad.iti.personalprofile.RlativeProfileActivity"
             android:label="@string/app_name"
@@ -82,19 +80,19 @@
             android:name="wmad.iti.personalprofile.PatientProfileActivity"
             android:label="@string/title_activity_patient_profile"
             android:theme="@style/MaterialTheme" />
+
         <activity
             android:name="wmad.iti.memories.MemoryActivity"
             android:label="@string/app_name"
             android:theme="@style/MaterialTheme" />
         <activity
             android:name="wmad.iti.memories.WriteTextActivity"
-            android:theme="@style/MaterialTheme" />
+            android:theme="@style/MaterialTheme"></activity>
 
         <!--maps-->
         <activity
             android:name="wmad.iti.irememeber.MapsActivity"
             android:label="@string/title_activity_maps" />
-
 
         <!-- The Service responsible for receiving messages from FCM -->
         <service android:name=".MyFirebaseMessagingService">
@@ -111,20 +109,7 @@
         </service>
         <service
             android:name=".SendTokenToServerIntentService"
-            android:exported="false" />
-        <service
-            android:name=".BluetoothServices"
-            android:exported="true" />
-
-        <service
-            android:name=".NotificationService"
-            android:exported="true" />
-
-        <activity android:name=".BluetoothDialog"
-
-            android:theme="@style/dialogeTheme"
-            />
-
+            android:exported="false"></service>
 
         <service
             android:name=".ShareLocationService"
@@ -133,7 +118,16 @@
         <activity
             android:name=".ReceiveOpenGpsRequestActivity"
             android:theme="@style/AppTheme"></activity>
-
     </application>
 
-</manifest>
+</manifest><!--=======<manifest xmlns:android="http://schemas.android.com/apk/res/android">--><!--&lt;!&ndash;--><!--The ACCESS_COARSE/FINE_LOCATION permissions are not required to use--><!--Google Maps Android API v2, but you must specify either coarse or fine--><!--location permissions for the 'MyLocation' functionality. --><!--&ndash;&gt;--><!--<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />-->
+
+    <!--<application>-->
+
+    <!--&lt;!&ndash;--><!--The API key for Google Maps-based APIs is defined as a string resource.--><!--(See the file "res/values/google_maps_api.xml").--><!--Note that the API key is linked to the encryption key used to sign the APK.--><!--You need a different API key for each encryption key, including the release key that is used to--><!--sign the APK for publishing.--><!--You can define the keys for the debug and release targets in src/debug/ and src/release/. --><!--&ndash;&gt;--><!--<meta-data android:name="com.google.android.geo.API_KEY"--><!--android:value="@string/google_maps_key" />-->
+
+    <!--<activity android:name="wmad.iti.irememeber.MapsActivity" android:label="@string/title_activity_maps">-->
+
+    <!--</activity>--><!--</application>-->
+
+    <!--</manifest>>>>>>>> Added-->
