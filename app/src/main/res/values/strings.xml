@@ -142,9 +142,6 @@
     </string-array>
 
 
-
-
-
     <!-- profile relative activity -->
     <string name="yourphone">Your phone</string>
     <string name="yourName">Your Name</string>
@@ -169,4 +166,17 @@
     <string name="memory">Memory</string>
     <string name="location">location</string>
     <string name="camera">photo</string>
+
+
+    <!--remind Array-->
+    <string-array name="remind_arr">
+        <item>check memory </item>
+        <item>home</item>
+        <item>relative</item>
+    </string-array>
+
+    <!--classes notifcation-->
+
+
+
 </resources>

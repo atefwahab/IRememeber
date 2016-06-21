@@ -48,6 +48,7 @@ import wmad.iti.model.SharedPreferenceManager;
 public class PatientAdapter extends RecyclerView.Adapter<PatientAdapter.ViewHolder> {
     private Context context;
     List<User> users;
+    static int count=0;
 
     GsonRequest gsonRequest;
     RequestQueue requestQueue;
@@ -77,19 +78,33 @@ public class PatientAdapter extends RecyclerView.Adapter<PatientAdapter.ViewHold
         final Activity activity = (Activity) context;
         user = users.get(position);
         holder.setData(user, position);
-        holder.starImage.setChecked(false);
+
+        boolean checked=checkTrusted(user.getEmail());
+        holder.starImage.setChecked(checked);
+
         holder.starImage.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton v, boolean isChecked) {
                 // to check intenet connection to delete patient
                 if (isInternetPresent) {
                     if (isChecked) {
-                        Toast.makeText(context, "add to favorite", Toast.LENGTH_LONG).show();
-                        holder.starImage.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.yellowstar));
+                        if(count==0) {
+                            count++;
+                            holder.starImage.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.yellowstar));
+                            setTrusted(SharedPreferenceManager.getEmail(PatientHome.instance().getApplicationContext()),user.getEmail());
+                            Toast.makeText(context, "add to favorite", Toast.LENGTH_LONG).show();
+
+                        }
+
                     } else{
-                        Toast.makeText(context,"remove from favorite",Toast.LENGTH_LONG).show();
+                        if(count>0){
+                            holder.starImage.setBackgroundDrawable(ContextCompat.getDrawable(context,R.drawable.star));
+                            count--;
+                            removeTrusted(user.getEmail());
+                            Toast.makeText(context,"remove from favorite",Toast.LENGTH_LONG).show();
+
+                        }
 //                        holder.starImage.setBackground(ContextCompat.getDrawable(context,R.drawable.star));
-                        holder.starImage.setBackgroundDrawable(ContextCompat.getDrawable(context,R.drawable.star));
                     }
 
                 } if(isInternetPresent==false){
@@ -293,4 +308,90 @@ public class PatientAdapter extends RecyclerView.Adapter<PatientAdapter.ViewHold
         }
 
     }
+
+    public boolean checkTrusted(String relativeEmail){
+        final boolean[] checked = {false};
+        RequestQueue queue= MySingleton.getInstance(PatientHome.instance().getApplicationContext()).getRequestQueue();
+
+        HashMap<String,String> hashMap=new HashMap<>();
+        hashMap.put("patientemail", SharedPreferenceManager.getEmail(PatientHome.instance().getApplicationContext()));
+        hashMap.put("relativeemail",relativeEmail);
+        GsonRequest jsonRequest= new GsonRequest(Urls.WEB_SERVICE_CHECK_TRUSTED_URL, Request.Method.POST, Status.class,hashMap, new Response.Listener<Status>() {
+            @Override
+            public void onResponse(Status response) {
+                  checked[0] =false;
+                if(response.getStatus()==1){
+                    checked[0] =true;
+                }else{
+                    checked[0] =false;
+                }
+
+            }
+
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+                Log.i("Response error", error.toString());
+            }
+        });
+        queue.add(jsonRequest);
+
+
+        return checked[0];
+    }
+
+
+    public void setTrusted(String patientEmail,String relativeEmail){
+        RequestQueue queue= MySingleton.getInstance(PatientHome.instance().getApplicationContext()).getRequestQueue();
+
+        HashMap<String,String> hashMap=new HashMap<>();
+        hashMap.put("patientemail", patientEmail);
+        hashMap.put("relativeemail",relativeEmail);
+        GsonRequest jsonRequest= new GsonRequest(Urls.WEB_SERVICE_SET_TRUSTED_URL, Request.Method.POST, Status.class,hashMap, new Response.Listener<Status>() {
+            @Override
+            public void onResponse(Status response) {
+                Log.i("set trusted: ","done");
+            }
+
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+                Log.i("Response error", error.toString());
+            }
+        });
+        queue.add(jsonRequest);
+
+
+
+    }
+
+
+    public void removeTrusted(String relativeEmail){
+        RequestQueue queue= MySingleton.getInstance(PatientHome.instance().getApplicationContext()).getRequestQueue();
+        String patientEmail=SharedPreferenceManager.getEmail(PatientHome.instance().getApplicationContext());
+        HashMap<String,String> hashMap=new HashMap<>();
+        hashMap.put("patientemail", patientEmail);
+        hashMap.put("relativeemail",relativeEmail);
+        GsonRequest jsonRequest= new GsonRequest(Urls.WEB_SERVICE_REMOVE_TRUSTED_URL, Request.Method.POST, Status.class,hashMap, new Response.Listener<Status>() {
+            @Override
+            public void onResponse(Status response) {
+                Log.i("remove trusted: ", "done");
+
+            }
+
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+                Log.i("Response error", error.toString());
+            }
+        });
+        queue.add(jsonRequest);
+
+    }
+
+
+
 }

@@ -5,15 +5,21 @@
  */
 package wmad.iti.dto;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.sql.Date;
 
 /**
  *
  * @author atef
  */
-public class Relative extends User {
+public class Relative extends User  {
     
     int relationshipPosition;
+
+    public Relative(){}
+
 
     public int getRelationshipPosition() {
         return relationshipPosition;
@@ -153,5 +159,6 @@ public class Relative extends User {
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
     }
-    
+
+
 }
