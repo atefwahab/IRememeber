@@ -33,6 +33,8 @@ import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -42,15 +44,16 @@ import wmad.iti.constants.Urls;
 import wmad.iti.dto.Memory;
 import wmad.iti.dto.Status;
 import wmad.iti.irememeber.R;
+import wmad.iti.model.ConnectionDetector;
 import wmad.iti.model.GsonRequest;
 import wmad.iti.model.MySingleton;
 import wmad.iti.model.SharedPreferenceManager;
 
 public class WriteTextActivity extends AppCompatActivity {
-    private Context contextForDialog= null;
+    private Context contextForDialog = null;
     RequestQueue requestQueue;
     GsonRequest gsonRequest;
-   // Button btnSave;
+    // Button btnSave;
     EditText textEditMemory;
     Memory memory;
     ImageView takenImg;
@@ -58,7 +61,7 @@ public class WriteTextActivity extends AppCompatActivity {
     //Camera
     File photoFile = null;
     String mCurrentPhotoPath;
-    String imagePath=null;
+    String imagePath = null;
 
     private static final int REQUEST_CAMERA = 209;
     private static final int REQUEST_GALLERY = 151;
@@ -66,6 +69,8 @@ public class WriteTextActivity extends AppCompatActivity {
     int positionIntent;
     Memory memoryIntent;
     ImageLoader mImageLoader;
+    String patientEmailIntent;
+    ConnectionDetector connectionDetector;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,13 +80,13 @@ public class WriteTextActivity extends AppCompatActivity {
         setContentView(R.layout.activity_write_text);
 
         //btnSave= (Button) findViewById(R.id.saveButton);
-        textEditMemory= (EditText) findViewById(R.id.writeMemoryText);
-        takenImg=(ImageView)findViewById(R.id.imagetaken);
+        textEditMemory = (EditText) findViewById(R.id.writeMemoryText);
+        takenImg = (ImageView) findViewById(R.id.imagetaken);
         Toolbar toolbar = (Toolbar) findViewById(R.id.memory);
         setSupportActionBar(toolbar);
-        postButton=(Button)toolbar.findViewById(R.id.postbutton);
+        postButton = (Button) toolbar.findViewById(R.id.postbutton);
 
-        getSupportActionBar().setTitle("write in  memory ");
+        getSupportActionBar().setTitle("write in memory ");
         toolbar.setNavigationIcon(R.drawable.navigation_back);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,140 +95,141 @@ public class WriteTextActivity extends AppCompatActivity {
             }
         });
 
+        patientEmailIntent = getIntent().getStringExtra("patientEmail");
 
 
+        positionIntent = getIntent().getIntExtra("position", 1000);
+        memoryIntent = getIntent().getParcelableExtra("memory");
 
-        positionIntent=getIntent().getIntExtra("position", 1000);
-        memoryIntent=getIntent().getParcelableExtra("memory");
 
+        final int flag = getIntent().getIntExtra("flag", 0);
+        Log.i("flag", flag + "-->flag");
 
-  final int flag=getIntent().getIntExtra("flag",0);
-        Log.i("flag",flag+ "-->flag");
+        switch (flag) {
+            case 1:
+                Log.i("photo flag", flag + "");
+                selectImage();
+                break;
 
-        switch (flag){
-        case 1:
-            Log.i("photo flag", flag + "");
-            selectImage();
-        break;
+            case 2:
+                Log.i("text flag", flag + "");
 
-        case 2:
-            Log.i("text flag", flag + "");
-
-        break;
+                break;
             case 3:
-               textEditMemory.setText(memoryIntent.getMemoryText());
+                textEditMemory.setText(memoryIntent.getMemoryText());
                 mImageLoader = MySingleton.getInstance(getApplicationContext()).getImageLoader();
-                Log.i("URL",memoryIntent.getImageUrl());
+                Log.i("URL", memoryIntent.getImageUrl());
                 mImageLoader.get(memoryIntent.getImageUrl(), ImageLoader.getImageListener(takenImg, 0, 0));
                 break;
 
-}
+        }
 
-       postButton.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            //Case photo
-            if(flag==1&&textEditMemory.getText().toString().length()==0) {
-                uploadPicture();
-                Intent intent = new Intent(getApplicationContext(), MemoryActivity.class);
-                startActivity(intent);
-            }
-           if(flag==1&&textEditMemory.getText().toString().length() < 10&&textEditMemory.getText().toString().length()!=0){
-               uploadPicture();
-             Intent intent = new Intent(getApplicationContext(), MemoryActivity.class);
-             startActivity(intent);
-            }
-            if(flag==1&&textEditMemory.getText().toString().length() > 10){
-           //     Toast.makeText(getApplicationContext(),"You enter > 10",Toast.LENGTH_LONG).show ();
-                  showDialog("You enter > 10");
-            }
-
-            //Case text
-            if(flag==2){
-                if(textEditMemory.getText().toString().length()==0){
-                    showDialog("you must enter memory");
+        postButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Case photo
+                if (flag == 1) {
+                    if (textEditMemory.getText().length() < 400) {
+                        uploadPicture();
+                    }
+                    if (textEditMemory.getText().length() > 400) {
+                        showDialog(getResources().getString(R.string.maxChar));
+                    }
                 }
-                if (textEditMemory.getText().toString().length() < 10) {
-                    if (textEditMemory.getText().length() != 0) {
+
+                //Case text
+                if (flag == 2) {
+                    if (textEditMemory.getText().length() != 0 && textEditMemory.getText().length() < 400) {
                         saveMemoryTextVolleyRequest();
-                        Intent intent = new Intent(getApplicationContext(), MemoryActivity.class);
-                        startActivity(intent);
+                        goToMemoryActivity();
+                    }
+                    if (textEditMemory.getText().length() > 400) {
+                        showDialog(getResources().getString(R.string.maxChar));
+                    }
+                    if (textEditMemory.getText().length() == 0) {
+
+                        showDialog(getResources().getString(R.string.nullText));
                     }
 
-
-                }
-                if(textEditMemory.getText().toString().length()>10){
-                  // Toast.makeText(getApplicationContext(),"You  enter >10",Toast.LENGTH_LONG).show ();
-                    showDialog("You enter > 10");
                 }
 
+                //case edit
+                if (flag == 3) {
+                    if (textEditMemory.getText().length() != 0 && textEditMemory.getText().length() < 400) {
+                        editTextMemory(positionIntent);
+                        goToMemoryActivity();
+                    }
+                    if ( textEditMemory.getText().length() > 400) {
+                        showDialog(getResources().getString(R.string.maxChar));
+                    }
+                    if ( textEditMemory.getText().length() == 0) {
 
-            }//end if text
-
-            //case edit
-            if(flag==3&&textEditMemory.getText().toString().length()==0){
-             // Toast.makeText(getApplicationContext(),"You  must enter memory",Toast.LENGTH_LONG).show ();
-                showDialog("You must enter memory");
-            }
-
-            if(flag==3&&textEditMemory.getText().toString().length()<10) {
-                if (flag == 3 && textEditMemory.getText().toString().length() != 0) {
-                    editTextMemory(positionIntent);
-                    Intent intent = new Intent(getApplicationContext(), MemoryActivity.class);
-                    startActivity(intent);
+                        showDialog(getResources().getString(R.string.nullText));
+                    }
                 }
+
             }
-            else{
-                showDialog("You enter > 10");
-            }
-      }
-    });
+
+        });
     }
+
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();
     }
 
-    public void saveMemoryTextVolleyRequest(){
+    public void saveMemoryTextVolleyRequest() {
+        //to test connectivity of internet
+        connectionDetector = new ConnectionDetector(getApplicationContext());
+        Boolean isInternetPresent = connectionDetector.isConnectingToInternet();
+        //if there is internet connection
+        if (isInternetPresent == true) {
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+            String currentDateandTime = simpleDateFormat.format(new Date());
 
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-        String currentDateandTime = simpleDateFormat.format(new Date());
+            Log.i("enter save memory", "memory");
+            HashMap<String, String> header = new HashMap<>();
+            header.put("patientEmail", SharedPreferenceManager.getUser(getApplicationContext()).getEmail());
+            header.put("relativeEmail", null);
+            header.put("text", textEditMemory.getText().toString());
+            header.put("date", currentDateandTime);
 
-        Log.i("enter save memory", "memory");
-        HashMap<String, String> header = new HashMap<>();
-        header.put("patientEmail",SharedPreferenceManager.getUser(getApplicationContext()).getEmail());
-        header.put("relativeEmail", null);
-        header.put("text", textEditMemory.getText().toString());
-        header.put("date",currentDateandTime);
+            memory = new Memory();
+            memory.setMemoryText(textEditMemory.getText().toString());
+            memory.setDateTime(currentDateandTime);
+            requestQueue = MySingleton.getInstance(getApplicationContext()).getRequestQueue();
+            //Creating a json request to get patients
+            gsonRequest = new GsonRequest(Urls.SAVE_MEMORY_TEXT_URL, Request.Method.POST, Status.class, header, new Response.Listener<Status>() {
 
-        memory=new Memory();
-        memory.setMemoryText(textEditMemory.getText().toString());
-        memory.setDateTime(currentDateandTime);
-        requestQueue = MySingleton.getInstance(getApplicationContext()).getRequestQueue();
-        //Creating a json request to get patients
-        gsonRequest = new GsonRequest(Urls.SAVE_MEMORY_TEXT_URL, Request.Method.POST, Status.class, header, new Response.Listener<Status>() {
+                @Override
+                public void onResponse(Status status) {
 
-            @Override
-            public void onResponse(Status status) {
+                    status.getMessage();
+                    Log.i("on Response ", status.getMessage());
+                    if (status.getStatus() == 1) {
+                        Toast.makeText(getApplicationContext(), getResources().getString(R.string.saveMemory), Toast.LENGTH_LONG).show();
+                    }
+                    if (status.getStatus() == 0) {
+                        Toast.makeText(getApplicationContext(), getResources().getString(R.string.failedMessage), Toast.LENGTH_LONG).show();
+                    }
+                }
 
-                status.getMessage();
-                Log.i("on Response ",status.getMessage());
-                Toast.makeText(getApplicationContext(), status.getMessage(), Toast.LENGTH_LONG).show();
-            }
-
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                Log.i("onErrorResponse: ", volleyError.getMessage());
-            }
-        });
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError volleyError) {
+                    Log.i("onErrorResponse: ", volleyError.getMessage());
+                }
+            });
 
 
-        //Adding request to the queue
-        requestQueue.add(gsonRequest);
-
+            //Adding request to the queue
+            requestQueue.add(gsonRequest);
+        } else {
+            Toast.makeText(getApplicationContext(), getResources().getString(R.string.no_internt_msg), Toast.LENGTH_LONG).show();
+        }
     }
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     /**
      * this method is used to select image using AlertDialoge
      */
@@ -278,6 +284,7 @@ public class WriteTextActivity extends AppCompatActivity {
 
         builder.show();
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -291,7 +298,7 @@ public class WriteTextActivity extends AppCompatActivity {
 
 
                     setImage();
-                  // uploadPicture();
+                    // uploadPicture();
 
                 }
                 break;
@@ -301,7 +308,7 @@ public class WriteTextActivity extends AppCompatActivity {
             case REQUEST_GALLERY:
                 if (resultCode == RESULT_OK) {
                     onSelectFromGallery(data);
-                   // uploadPicture();
+                    // uploadPicture();
                 }
                 break;
         }
@@ -343,7 +350,7 @@ public class WriteTextActivity extends AppCompatActivity {
         // Determine how much to scale down the image
         int scaleFactor = 1;
         if ((targetW > 0) || (targetH > 0)) {
-            scaleFactor = Math.min(photoW/targetW, photoH/targetH);
+            scaleFactor = Math.min(photoW / targetW, photoH / targetH);
         }
         // int scaleFactor = Math.min(photoW / targetW, photoH / targetH);
 
@@ -357,6 +364,7 @@ public class WriteTextActivity extends AppCompatActivity {
         takenImg.setImageBitmap(bitmap);
 
     }
+
     private void onSelectFromGallery(Intent data) {
 
         Bitmap image = null;
@@ -379,41 +387,53 @@ public class WriteTextActivity extends AppCompatActivity {
      * This method used to upload image to server
      */
     private void uploadPicture() {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-        final String currentDateandTime = simpleDateFormat.format(new Date());
-        final ProgressDialog loading = ProgressDialog.show(this, "Uploading...", "Please wait...", false, false);
-        Ion.with(getApplicationContext())
-                .load(Urls.MEMORY_IMAGE_UPLOAD_URL).setLogging("UPLOAD LOGS", Log.DEBUG)
-                .setMultipartParameter("date",currentDateandTime)
-                .setMultipartParameter("text", textEditMemory.getText().toString())
-                .setMultipartParameter("patientEmail", SharedPreferenceManager.getUser(getApplicationContext()).getEmail())
-                .setMultipartParameter("relativeEmail", "doaa@gmail.com")
-                .setMultipartFile("file", "application/zip", new File(imagePath)).asJsonObject().setCallback(new FutureCallback<JsonObject>() {
-            @Override
-            public void onCompleted(Exception e, JsonObject result) {
-                if (e != null) {
-                    e.printStackTrace();
-                }
-                loading.dismiss();
-                Log.i("completed", "completed");
-
-                if (result != null) {
-
-                    Log.i("success", result.get("message").getAsString());
-                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-                    String currentDateandTime = simpleDateFormat.format(new Date());
+        //to test connectivity of internet
+        connectionDetector = new ConnectionDetector(getApplicationContext());
+        Boolean isInternetPresent = connectionDetector.isConnectingToInternet();
+        //if there is internet connection
+        if (isInternetPresent == true) {
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+            final String currentDateandTime = simpleDateFormat.format(new Date());
+            final ProgressDialog loading = ProgressDialog.show(this, "Uploading...", "Please wait...", false, false);
+            Ion.with(getApplicationContext())
+                    .load(Urls.MEMORY_IMAGE_UPLOAD_URL).setLogging("UPLOAD LOGS", Log.DEBUG)
+                    .setMultipartParameter("date", currentDateandTime)
+                    .setMultipartParameter("text", textEditMemory.getText().toString())
+                    .setMultipartParameter("patientEmail", SharedPreferenceManager.getUser(getApplicationContext()).getEmail())
+                    .setMultipartParameter("relativeEmail", null)
+                    .setMultipartFile("file", "application/zip", new File(imagePath)).asJsonObject().setCallback(new FutureCallback<JsonObject>() {
+                @Override
+                public void onCompleted(Exception e, JsonObject result) {
+                    if (e != null) {
+                        e.printStackTrace();
+                    }
                     loading.dismiss();
+                    Log.i("completed", "completed");
 
+                    if (result != null) {
+
+                        Log.i("success", result.get("message").getAsString());
+                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+                        String currentDateandTime = simpleDateFormat.format(new Date());
+                        loading.dismiss();
+                        goToMemoryActivity();
+
+                    }
                 }
-            }
-        });
+            });
+        } else {
+            Toast.makeText(getApplicationContext(), getResources().getString(R.string.no_internt_msg), Toast.LENGTH_LONG).show();
+        }
     }
-    private void callback(){
+
+    private void callback() {
 
         Log.i("CallBack", "i was called");
     }
+
     /**
      * to get the Real Path of uri
+     *
      * @param contentURI
      * @return
      */
@@ -430,77 +450,101 @@ public class WriteTextActivity extends AppCompatActivity {
         }
         return result;
     }
+
     /**
      * This method is used to make patient edit his memories
+     *
      * @param position
      */
     private void editTextMemory(int position) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-        String currentDateandTime = simpleDateFormat.format(new Date());
-       // final Memory memory=memories.get(position);
-        int memoryId=memoryIntent.getMemoryId();
-        Log.i("memoryID",memoryId+"");
-        HashMap<String, String> header = new HashMap<>();
-        header.put("memoryId",String.valueOf(memoryId));
-        header.put("date",currentDateandTime);
-        header.put("text", textEditMemory.getText().toString());
-        requestQueue = MySingleton.getInstance(getApplicationContext()).getRequestQueue();
+        //to test connectivity of internet
+        connectionDetector = new ConnectionDetector(getApplicationContext());
+        Boolean isInternetPresent = connectionDetector.isConnectingToInternet();
+        //if there is internet connection
+        if (isInternetPresent == true) {
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+            String currentDateandTime = simpleDateFormat.format(new Date());
+            // final Memory memory=memories.get(position);
+            int memoryId = memoryIntent.getMemoryId();
+            Log.i("memoryID", memoryId + "");
+            HashMap<String, String> header = new HashMap<>();
+            header.put("memoryId", String.valueOf(memoryId));
+            header.put("date", currentDateandTime);
+            header.put("text", textEditMemory.getText().toString());
+            requestQueue = MySingleton.getInstance(getApplicationContext()).getRequestQueue();
 
-        gsonRequest = new GsonRequest(Urls.EDIT_MEMORY_URL, Request.Method.POST,Status.class, header, new Response.Listener<Status>() {
+            gsonRequest = new GsonRequest(Urls.EDIT_MEMORY_URL, Request.Method.POST, Status.class, header, new Response.Listener<Status>() {
 
-            @Override
-            public void onResponse(Status status) {
+                @Override
+                public void onResponse(Status status) {
+                    if (status.getStatus() == 1) {
+                        Toast.makeText(getApplicationContext(), getResources().getString(R.string.editMemory), Toast.LENGTH_LONG).show();
+                    }
+                    if (status.getStatus() == 0) {
+                        Toast.makeText(getApplicationContext(), getResources().getString(R.string.failedMessage), Toast.LENGTH_LONG).show();
+                    }
 
-                Toast.makeText(getApplicationContext(), status.getMessage(),Toast.LENGTH_LONG).show();
-
-
-            }
-
-
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-
-                // Toast.makeText(RelativesListHome.this, "Error Response of get relatives: " + volleyError.getMessage(), Toast.LENGTH_LONG).show();
-                Log.i("onErrorResponse: ", volleyError.getMessage());
-
-
-            }
-        });
+                }
 
 
-        //Adding request to the queue
-        requestQueue.add(gsonRequest);
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError volleyError) {
 
+                    // Toast.makeText(RelativesListHome.this, "Error Response of get relatives: " + volleyError.getMessage(), Toast.LENGTH_LONG).show();
+                    Log.i("onErrorResponse: ", volleyError.getMessage());
+
+
+                }
+            });
+
+
+            //Adding request to the queue
+            requestQueue.add(gsonRequest);
+        } else {
+            Toast.makeText(getApplicationContext(), getResources().getString(R.string.no_internt_msg), Toast.LENGTH_LONG).show();
+        }
     }
 
     /**
      * This method is used to show dialog
+     *
      * @param message
      */
 
-    public void showDialog(String message){
+    public void showDialog(String message) {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(WriteTextActivity.this);
 
-                    alertDialog.setTitle("Warning");
-                    alertDialog.setMessage(message);
-                    alertDialog.setPositiveButton("CANCEL", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            Intent intent = new Intent(getApplicationContext(), MemoryActivity.class);
-                            startActivity(intent);
-                        }
-                    });
+        alertDialog.setTitle("Warning");
+        alertDialog.setMessage(message);
+        alertDialog.setPositiveButton("CANCEL", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                Intent intent = new Intent(getApplicationContext(), MemoryActivity.class);
+                startActivity(intent);
+            }
+        });
 
 
-                    alertDialog.setNegativeButton("OK", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
+        alertDialog.setNegativeButton("OK", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
 
-                            dialog.cancel();
-                        }
-                    });
+                dialog.cancel();
+            }
+        });
 
-                    alertDialog.show();
+        alertDialog.show();
 
     }
+
+
+    /**
+     * this is used to go to memory Activity
+     */
+    private void goToMemoryActivity() {
+        Intent intent = new Intent(getApplicationContext(), MemoryActivity.class);
+        startActivity(intent);
+        this.finish();
+    }
+
 
 }

@@ -42,7 +42,7 @@ public class RelativeActivity extends AppCompatActivity {
     String addreess;
     String city;
     String country;
-    String imageUrl;
+    String imageUrl,relativeEmail;
     LocationManager locationManager;
     LocationListener bestLocationListener;
     CircularImageView circularImageView;
@@ -61,7 +61,8 @@ public class RelativeActivity extends AppCompatActivity {
         relativeFirstName=getIntent().getStringExtra("relativeFirstName");
         relativeLastName=getIntent().getStringExtra("relativeLastName");
         imageUrl=getIntent().getStringExtra("imageUrl");
-
+        relativeEmail=getIntent().getStringExtra("relativeEmail");
+        Log.i("relativeEmail",relativeEmail+"relativeActivity");
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(R.drawable.navigation_back);
@@ -77,7 +78,7 @@ public class RelativeActivity extends AppCompatActivity {
         gridView = (GridView) findViewById(R.id.gridView1);
         iconsImages = new int[]{R.drawable.call, R.drawable.sms, R.drawable.add_memory, R.drawable.panic_mode};
         iconTitles = getResources().getStringArray(R.array.relative_activity_arr);
-        gridView.setAdapter(new CustomRelativeActivityAdapter(this, iconTitles, iconsImages));
+        gridView.setAdapter(new CustomRelativeActivityAdapter(this, iconTitles, iconsImages,relativeFirstName,relativeLastName,relativeEmail));
 
         phone = getIntent().getStringExtra("phoneNumber");
         getRelativePhoto();

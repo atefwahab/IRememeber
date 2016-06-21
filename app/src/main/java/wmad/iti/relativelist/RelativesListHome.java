@@ -106,11 +106,14 @@ public class RelativesListHome extends AppCompatActivity {
                         relative.setImageUrl(users[i].getImageUrl());
                         relative.setPhoneNumber(users[i].getPhoneNumber());
                         relative.setAddress(users[i].getAddress());
+                        relative.setEmail(users[i].getEmail());
                         relatives.add(relative);
                     }
-
-                    addRelativesToList(relatives);
-
+                     if(relatives.size()!=0) {
+                         addRelativesToList(relatives);
+                     }else{
+                         Toast.makeText(getApplicationContext(),"There are not relatives to show", Toast.LENGTH_LONG).show();
+                     }
                   SharedPreferenceManager.saveRelatives(getApplicationContext(), users);
                  //   Toast.makeText(getApplicationContext(), "result of cache relative= " + result, Toast.LENGTH_LONG).show();
 

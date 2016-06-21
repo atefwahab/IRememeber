@@ -16,6 +16,17 @@ public class Memory implements Parcelable{
     Double latitude;
     String address;
     User user;
+    Relative relative;
+
+    public Relative getRelative() {
+        return relative;
+    }
+
+    public Relative setRelative(Relative relative) {
+        this.relative = relative;
+        return relative;
+    }
+
     public Memory(){}
 
     protected Memory(Parcel in) {
