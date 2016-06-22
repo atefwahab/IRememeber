@@ -63,7 +63,7 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyCvStzDK_pkyQhMGf-V9ouu1lfDiT7oxU4" />
+            android:value="@string/google_maps_key" />
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
@@ -89,6 +89,12 @@
         <activity
             android:name="wmad.iti.memories.WriteTextActivity"
             android:theme="@style/MaterialTheme" />
+
+        <!--maps-->
+        <activity
+            android:name="wmad.iti.irememeber.MapsActivity"
+            android:label="@string/title_activity_maps" />
+
 
         <!-- The Service responsible for receiving messages from FCM -->
         <service android:name=".MyFirebaseMessagingService">
@@ -120,6 +126,13 @@
             />
 
 
+        <service
+            android:name=".ShareLocationService"
+            android:exported="false"></service>
+
+        <activity
+            android:name=".ReceiveOpenGpsRequestActivity"
+            android:theme="@style/AppTheme"></activity>
 
     </application>
 

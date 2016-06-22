@@ -1,8 +1,7 @@
-<?xml version="1.0" encoding="utf-8"?>
+
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:fresco="http://schemas.android.com/tools"
-    android:id="@+id/relativeListId"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginLeft="5dp"
@@ -15,7 +14,6 @@
         android:layout_height="wrap_content"
         android:background="@android:color/white"
         android:orientation="horizontal"
-
         >
         <!--patient image -->
         <com.facebook.drawee.view.SimpleDraweeView
@@ -32,7 +30,7 @@
             android:orientation="vertical">
             <TextView
                 android:id="@+id/relative_name"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="60dp"
                 android:layout_margin="6dp"
                 android:text="title"
@@ -47,6 +45,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
+
+            <ToggleButton
+                android:id="@+id/star_image"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_margin="11dp"
+                android:background="@drawable/star"
+                android:textOn=""
+                android:textOff=""
+                />
+
+
 
         </LinearLayout>
 

@@ -48,8 +48,6 @@ import wmad.iti.model.SharedPreferenceManager;
 public class PatientAdapter extends RecyclerView.Adapter<PatientAdapter.ViewHolder> {
     private Context context;
     List<User> users;
-    static int count=0;
-
     GsonRequest gsonRequest;
     RequestQueue requestQueue;
     ConnectionDetector connectionDetector;
@@ -79,41 +77,6 @@ public class PatientAdapter extends RecyclerView.Adapter<PatientAdapter.ViewHold
         user = users.get(position);
         holder.setData(user, position);
 
-        boolean checked=checkTrusted(user.getEmail());
-        holder.starImage.setChecked(checked);
-
-        holder.starImage.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton v, boolean isChecked) {
-                // to check intenet connection to delete patient
-                if (isInternetPresent) {
-                    if (isChecked) {
-                        if(count==0) {
-                            count++;
-                            holder.starImage.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.yellowstar));
-                            setTrusted(SharedPreferenceManager.getEmail(PatientHome.instance().getApplicationContext()),user.getEmail());
-                            Toast.makeText(context, "add to favorite", Toast.LENGTH_LONG).show();
-
-                        }
-
-                    } else{
-                        if(count>0){
-                            holder.starImage.setBackgroundDrawable(ContextCompat.getDrawable(context,R.drawable.star));
-                            count--;
-                            removeTrusted(user.getEmail());
-                            Toast.makeText(context,"remove from favorite",Toast.LENGTH_LONG).show();
-
-                        }
-//                        holder.starImage.setBackground(ContextCompat.getDrawable(context,R.drawable.star));
-                    }
-
-                } if(isInternetPresent==false){
-
-                    Snackbar snackbar = Snackbar.make(v, context.getResources().getString(R.string.NoConnection), Snackbar.LENGTH_LONG);
-                    snackbar.show();
-                }
-            }
-        });
         //Listener of delete button
         holder.deleteImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -254,7 +217,6 @@ public class PatientAdapter extends RecyclerView.Adapter<PatientAdapter.ViewHold
 
         public TextView patientName;
         public ImageView deleteImage;
-        public ToggleButton starImage;
         public SimpleDraweeView patientImage;
         int position;
         User user;
@@ -266,7 +228,6 @@ public class PatientAdapter extends RecyclerView.Adapter<PatientAdapter.ViewHold
             patientName = (TextView) itemView.findViewById(R.id.patien_name);
             patientImage= (SimpleDraweeView) itemView.findViewById(R.id.patien_image);
             deleteImage= (ImageView)itemView.findViewById(R.id.delete_image);
-            starImage=(ToggleButton)itemView.findViewById(R.id.star_image);
 
             //to open patient activity
             patientName.setOnClickListener(new View.OnClickListener() {

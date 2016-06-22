@@ -1,5 +1,6 @@
 package wmad.iti.irememeber;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -15,6 +16,7 @@ import android.graphics.BitmapFactory;
 import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
@@ -78,6 +80,7 @@ import wmad.iti.dto.User;
 import wmad.iti.model.GsonRequest;
 import wmad.iti.model.MySingleton;
 import wmad.iti.model.SharedPreferenceManager;
+import wmad.iti.util.PathValue;
 import wmad.iti.util.Validator;
 
 public class RegisterActivity extends AppCompatActivity implements BirthdateInterface, AdapterView.OnItemSelectedListener {
@@ -595,7 +598,8 @@ public class RegisterActivity extends AppCompatActivity implements BirthdateInte
             Log.i("******* ", data.getData().toString());
             try {
                 // to know path of image
-                imagePath = getRealPathFromURI(data.getData());
+
+                imagePath = PathValue.getPath(getApplicationContext(),data.getData());
                 image = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), data.getData());
                 circularImageView.setImageBitmap(image);
             } catch (IOException e) {
@@ -771,7 +775,7 @@ public class RegisterActivity extends AppCompatActivity implements BirthdateInte
             lastnameLayout = (LinearLayout) findViewById(R.id.lastnameLayout);
             firstnameNextButton.setVisibility(View.GONE);
             firstnameTextInputLayout.setErrorEnabled(false);
-            //firstNameEditText.setEnabled(false);
+            firstNameEditText.setEnabled(false);
             lastnameLayout.setVisibility(View.VISIBLE);
 
             scrollView.post(new Runnable() {
@@ -808,7 +812,7 @@ public class RegisterActivity extends AppCompatActivity implements BirthdateInte
             user.setLastName(lastnameEditText.getText().toString());
             phonenumLayout = (LinearLayout) findViewById(R.id.phonenumLayout);
             lastnameNextButton.setVisibility(View.GONE);
-            //lastnameEditText.setEnabled(false);
+            lastnameEditText.setEnabled(false);
             lastnameTextInputLayout.setErrorEnabled(false);
             phonenumLayout.setVisibility(View.VISIBLE);
 
@@ -843,7 +847,7 @@ public class RegisterActivity extends AppCompatActivity implements BirthdateInte
             user.setPhoneNumber(phoneInputView.getNumber());
             homeNumberLayout = (LinearLayout) findViewById(R.id.homePhoneNumberLayout);
             phoneNumberNextButton.setVisibility(View.GONE);
-            //phoneInputView.setEnabled(false);
+            phoneInputView.setEnabled(false);
             homeNumberLayout.setVisibility(View.VISIBLE);
 
             scrollView.post(new Runnable() {
@@ -876,7 +880,7 @@ public class RegisterActivity extends AppCompatActivity implements BirthdateInte
 
 
         homeNumberNextButton.setVisibility(View.GONE);
-        //homeNumberEditText.setEnabled(false);
+        homeNumberEditText.setEnabled(false);
         birthdateEditText.setEnabled(false);
         birthdateLayout.setVisibility(View.VISIBLE);
 
@@ -969,7 +973,7 @@ public class RegisterActivity extends AppCompatActivity implements BirthdateInte
             user.setEmail(emailEditText.getText().toString());
 
             passwordLayout = (LinearLayout) findViewById(R.id.passwordLayout);
-            // emailEditText.setEnabled(false);
+            emailEditText.setEnabled(false);
             emailNextButton.setVisibility(View.GONE);
             passwordLayout.setVisibility(View.VISIBLE);
 
@@ -1204,19 +1208,7 @@ public class RegisterActivity extends AppCompatActivity implements BirthdateInte
      * @param contentURI
      * @return
      */
-    private String getRealPathFromURI(Uri contentURI) {
-        String result;
-        Cursor cursor = getContentResolver().query(contentURI, null, null, null, null);
-        if (cursor == null) { // Source is Dropbox or other similar local file path
-            result = contentURI.getPath();
-        } else {
-            cursor.moveToFirst();
-            int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
-            result = cursor.getString(idx);
-            cursor.close();
-        }
-        return result;
-    }
+
 
     /**
      * this method used to perform login
@@ -1285,6 +1277,7 @@ public class RegisterActivity extends AppCompatActivity implements BirthdateInte
      * @author Donia
      * this method used to get Mac Address
      */
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
     public String getMacAddress() {
         final BluetoothManager bluetoothManager =
                 (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);

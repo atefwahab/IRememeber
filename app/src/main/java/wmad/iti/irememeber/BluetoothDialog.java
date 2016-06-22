@@ -67,7 +67,7 @@ public class BluetoothDialog extends AppCompatActivity {
         mImageLoader = MySingleton.getInstance(getApplicationContext()).getImageLoader();
         mImageLoader.get(image, ImageLoader.getImageListener(photoRelative, 0, 0));
         mMediaPlayer = new MediaPlayer();
-        mMediaPlayer = MediaPlayer.create(this, R.raw.music);
+        mMediaPlayer = MediaPlayer.create(this, R.raw.music1);
         mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         mMediaPlayer.setLooping(true);
         mMediaPlayer.start();

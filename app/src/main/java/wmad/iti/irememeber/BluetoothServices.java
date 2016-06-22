@@ -65,8 +65,11 @@ public class BluetoothServices extends Service {
                 while(true){
                     Log.i("run: ","in Thread");
                     if (!mBluetoothAdapter.isEnabled()) {
-                        Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                        PatientHomeActivity.instance().startActivityForResult(intent,1000);
+//                        Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+//                        PatientHomeActivity.instance().startActivityForResult(intent,1000);
+                        Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
+                        discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION,60000);
+                        PatientHomeActivity.instance().startActivity(discoverableIntent);
                     }
                     registerReceiver(mReceiver, filter);
                     mBluetoothAdapter.startDiscovery();

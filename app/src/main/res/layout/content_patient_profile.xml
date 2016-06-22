@@ -32,10 +32,9 @@
 
                 <FrameLayout
                     android:weightSum="10"
-
                     android:layout_width="match_parent"
                     android:layout_height="200dp"
-                    android:layout_marginTop="30dp"
+                    android:layout_marginTop="55dp"
                     >
 
                     <!--circle view for preview profile picture-->
@@ -71,7 +70,7 @@
 
                     android:orientation="vertical"
                     android:layout_width="match_parent"
-                    android:layout_height="100dp"
+                    android:layout_height="80dp"
                     android:visibility="visible"
                     android:layout_marginTop="20dp"
                     android:id="@+id/firstnameLayout">
@@ -81,6 +80,8 @@
                         android:layout_height="38dp"
                         android:hint="@string/yourName"
                         android:gravity="center"
+                        android:layout_marginLeft="12dp"
+                        android:layout_marginRight="12dp"
                         android:textColorHint="@color/colorPrimary"
                         android:background="@drawable/textview_border"
                         android:id="@+id/firsttext"
@@ -99,7 +100,7 @@
 
                     android:orientation="vertical"
                     android:layout_width="match_parent"
-                    android:layout_height="100dp"
+                    android:layout_height="80dp"
                     android:visibility="visible"
 
                     android:id="@+id/phonenumLayout">
@@ -109,6 +110,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="38dp"
                         android:hint="@string/yourphone"
+                        android:layout_marginLeft="12dp"
+                        android:layout_marginRight="12dp"
                         android:gravity="center"
                         android:textColorHint="@color/colorPrimary"
                         android:background="@drawable/textview_border"
@@ -125,15 +128,16 @@
 
                     android:orientation="vertical"
                     android:layout_width="match_parent"
-                    android:layout_height="100dp"
+                    android:layout_height="80dp"
                     android:visibility="visible"
-
                     android:id="@+id/countryLayout">
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="38dp"
                         android:hint="@string/yourcountry"
+                        android:layout_marginRight="12dp"
+                        android:layout_marginLeft="12dp"
                         android:gravity="center"
                         android:textColorHint="@color/colorPrimary"
                         android:background="@drawable/textview_border"
@@ -150,7 +154,7 @@
 
                     android:orientation="vertical"
                     android:layout_width="match_parent"
-                    android:layout_height="100dp"
+                    android:layout_height="80dp"
                     android:visibility="visible"
 
                     android:id="@+id/cityLayout">
@@ -161,6 +165,8 @@
                         android:layout_height="38dp"
                         android:hint="@string/yourcity"
                         android:gravity="center"
+                        android:layout_marginLeft="12dp"
+                        android:layout_marginRight="12dp"
                         android:textColorHint="@color/colorPrimary"
                         android:background="@drawable/textview_border"
                         android:id="@+id/citytext"
@@ -175,9 +181,8 @@
 
                     android:orientation="vertical"
                     android:layout_width="match_parent"
-                    android:layout_height="100dp"
+                    android:layout_height="80dp"
                     android:visibility="visible"
-
                     android:id="@+id/addressLayout">
 
 
@@ -185,6 +190,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="38dp"
                         android:hint="@string/youraddress"
+                        android:layout_marginLeft="12dp"
+                        android:layout_marginRight="12dp"
                         android:gravity="center"
                         android:textColorHint="@color/colorPrimary"
                         android:background="@drawable/textview_border"

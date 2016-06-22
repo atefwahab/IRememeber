@@ -113,7 +113,7 @@ public class PatientHome extends AppCompatActivity {
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError volleyError) {
-                    Log.i("onErrorResponse: ", volleyError.getMessage());
+                    Log.i("onErrorResponse: ", volleyError.toString());
 //                    ArrayList<User>arrPatients=SharedPreferenceManager.getPatients(getApplicationContext());
 //                    addPatientsToList(arrPatients);
 

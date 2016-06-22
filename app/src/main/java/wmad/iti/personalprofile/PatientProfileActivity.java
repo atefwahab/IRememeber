@@ -47,6 +47,7 @@ import wmad.iti.model.ConnectionDetector;
 import wmad.iti.model.GsonRequest;
 import wmad.iti.model.MySingleton;
 import wmad.iti.model.SharedPreferenceManager;
+import wmad.iti.util.PathValue;
 
 public class PatientProfileActivity extends AppCompatActivity {
 
@@ -295,7 +296,7 @@ public class PatientProfileActivity extends AppCompatActivity {
             Log.i("******* ", data.getData().toString());
             try {
                 // to know path of image
-                imagePath = getRealPathFromURI(data.getData());
+                imagePath = PathValue.getPath(getApplicationContext(),data.getData());
                 image = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), data.getData());
                 relativeImageProfile.setImageBitmap(image);
             } catch (IOException e) {
@@ -399,12 +400,8 @@ public class PatientProfileActivity extends AppCompatActivity {
 
                     user = response.getUser();
                     setFirstNameText(user);
-
                     setPhoneNumText(user);
                     setCountryText(user);
-                    Log.i("&&&&&&&&&: ", user.getCountry());
-                  //  countrytText.setText(user.getCountry());
-
                     setCityText(user);
                     setAddressText(user);
 
@@ -420,8 +417,12 @@ public class PatientProfileActivity extends AppCompatActivity {
                 else {
 
                     Log.i("loginfail", response.toString());
-                    SharedPreferenceManager.getUser(getApplicationContext());
-
+                    User user = SharedPreferenceManager.getUser(getApplicationContext());
+                    setFirstNameText(user);
+                    setPhoneNumText(user);
+                    setCountryText(user);
+                    setCityText(user);
+                    setAddressText(user);
                 }//end else
 
             }
@@ -431,9 +432,13 @@ public class PatientProfileActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
 
-                Log.i("error volley", error.toString());
-                SharedPreferenceManager.getUser(getApplicationContext());
-
+                // Log.i("error volley", error.toString());
+                User user = SharedPreferenceManager.getUser(getApplicationContext());
+                setFirstNameText(user);
+                setPhoneNumText(user);
+                setCountryText(user);
+                setCityText(user);
+                setAddressText(user);
             }
 
         });
@@ -1111,20 +1116,7 @@ public class PatientProfileActivity extends AppCompatActivity {
      * @param contentURI
      * @return
      */
-    private String getRealPathFromURI(Uri contentURI) {
-        String result;
-        Cursor cursor = getContentResolver().query(contentURI, null, null, null, null);
-        if (cursor == null) { // Source is Dropbox or other similar local file path
-            result = contentURI.getPath();
-        }//end if
-        else {
-            cursor.moveToFirst();
-            int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
-            result = cursor.getString(idx);
-            cursor.close();
-        }//end else
-        return result;
-    }//end method of getRealPathFromURI
+
 
 
 
