@@ -22,6 +22,7 @@ import java.util.List;
 
 import wmad.iti.constants.Urls;
 import wmad.iti.dto.Relative;
+import wmad.iti.dto.Status;
 import wmad.iti.dto.User;
 import wmad.iti.irememeber.R;
 import wmad.iti.model.ConnectionDetector;
@@ -46,6 +47,7 @@ public class RelativesListHome extends AppCompatActivity {
     RequestQueue requestQueue;
     ConnectionDetector connectionDetector;
     Toolbar toolbar;
+    String emailTrusted="";
         public  static RelativesListHome instance(){return  inst;}
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +60,6 @@ public class RelativesListHome extends AppCompatActivity {
         setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(R.drawable.navigation_back);
         getSupportActionBar().setTitle("Relatives");
-
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -131,6 +132,7 @@ public class RelativesListHome extends AppCompatActivity {
 
             //Adding request to the queue
             requestQueue.add(gsonRequest);
+            getTrusted(SharedPreferenceManager.getEmail(getApplicationContext()));
         }//end if
         if(isInternetPresent==false) {
 
@@ -148,7 +150,8 @@ public class RelativesListHome extends AppCompatActivity {
 
     public void initializeRecyclerView( ){
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        adapter = new RelativeAdapter(listUsers, this);
+        Log.i("email trusted  ", emailTrusted);
+        adapter = new RelativeAdapter(listUsers, this,emailTrusted);
 
         //Adding adapter to recyclerview
         recyclerView.setAdapter(adapter);
@@ -167,6 +170,33 @@ public class RelativesListHome extends AppCompatActivity {
 
         //This method used to initialize recycler view
         initializeRecyclerView();
+
+    }
+
+    public void getTrusted(String patientEmail){
+        Log.i("checkTrusted: ",patientEmail);
+        RequestQueue queue= MySingleton.getInstance(RelativesListHome.instance().getApplicationContext()).getRequestQueue();
+        HashMap<String,String> hashMap=new HashMap<>();
+        hashMap.put("patientemail", SharedPreferenceManager.getEmail(RelativesListHome.instance().getApplicationContext()));
+        hashMap.put("relativeemail",patientEmail);
+        GsonRequest jsonRequest= new GsonRequest(Urls.WEB_SERVICE_GET_TRUSTED_URL, Request.Method.POST, Relative.class,hashMap, new Response.Listener<Relative>() {
+            @Override
+            public void onResponse(Relative response) {
+             if(response.getEmail()!=null) {
+                 emailTrusted = response.getEmail();
+                 Log.i("emailTrusted: ", emailTrusted);
+             }
+            }
+
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+                Log.i("Response error", error.toString());
+            }
+        });
+        queue.add(jsonRequest);
+
 
     }
 

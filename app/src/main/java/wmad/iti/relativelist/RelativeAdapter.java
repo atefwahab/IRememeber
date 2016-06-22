@@ -24,6 +24,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
@@ -50,14 +51,16 @@ public class RelativeAdapter extends RecyclerView.Adapter<RelativeAdapter.ViewHo
 
     private Context context;
     List<User> users;
-    static int count=0;
+    boolean flag=false;
+
     GsonRequest gsonRequest;
     RequestQueue requestQueue;
     ConnectionDetector connectionDetector;
     Boolean isInternetPresent;
     User user;
+    String emailTrusted;
 
-    public RelativeAdapter(List<User> users, Context context){
+    public RelativeAdapter(List<User> users, Context context, String emailTrusted){
         super();
         //Getting all users
         this.users = users;
@@ -65,6 +68,7 @@ public class RelativeAdapter extends RecyclerView.Adapter<RelativeAdapter.ViewHo
         //to checck connection to internet to delete patient
         connectionDetector = new ConnectionDetector(context);
         isInternetPresent = connectionDetector.isConnectingToInternet();
+        this.emailTrusted=emailTrusted;
     }
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -82,11 +86,21 @@ public class RelativeAdapter extends RecyclerView.Adapter<RelativeAdapter.ViewHo
 
         //to set text of user name
         holder.relativeName.setText(user.getFirstName() + " " + user.getLastName());
-        Log.i("onBindViewHolder: ",user.getEmail());
-        boolean checked=checkTrusted(user.getEmail());
+        Log.i("onBindViewHolder: ",users.get(position).getEmail());
 
-
-        holder.starImage.setChecked(checked);
+        //checkTrusted(users.get(position).getEmail());
+        Log.i("email trusted  ", emailTrusted);
+        Log.i("email user", user.getEmail());
+        String emailUser=user.getEmail();
+        if(emailUser.equals(emailTrusted)) {
+           holder.starImage.setChecked(true);
+            holder.starImage.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.yellowstar));
+            flag=true;
+            Log.i("check: ","i am here >> true");
+       }else{
+           holder.starImage.setChecked(false);
+            holder.starImage.setBackgroundDrawable(ContextCompat.getDrawable(context,R.drawable.star));
+        }
 
         holder.starImage.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -94,20 +108,19 @@ public class RelativeAdapter extends RecyclerView.Adapter<RelativeAdapter.ViewHo
                 // to check intenet connection to delete patient
                 if (isInternetPresent) {
                     if (isChecked) {
-                        if(count==0) {
-                            count++;
+                        if(flag==false) {
+                            flag=true;
                             holder.starImage.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.yellowstar));
                             setTrusted(SharedPreferenceManager.getEmail(RelativesListHome.instance().getApplicationContext()),users.get(position).getEmail());
                             Toast.makeText(context, "add to favorite", Toast.LENGTH_LONG).show();
                         }
                     } else{
-                        if(count>0){
+                        if(flag==true){
                             holder.starImage.setBackgroundDrawable(ContextCompat.getDrawable(context,R.drawable.star));
-                            count--;
+                            flag=false;
                             removeTrusted(users.get(position).getEmail());
                             Toast.makeText(context,"remove from favorite",Toast.LENGTH_LONG).show();
                         }
-//                        holder.starImage.setBackground(ContextCompat.getDrawable(context,R.drawable.star));
                     }
 
                 } if(isInternetPresent==false){
@@ -189,38 +202,39 @@ public class RelativeAdapter extends RecyclerView.Adapter<RelativeAdapter.ViewHo
     }// end ViewHolder class (inner class)
 
 
-    public boolean checkTrusted(String relativeEmail){
-        Log.i("checkTrusted: ",relativeEmail);
-        final boolean[] checked = {false};
-        RequestQueue queue= MySingleton.getInstance(RelativesListHome.instance().getApplicationContext()).getRequestQueue();
-
-        HashMap<String,String> hashMap=new HashMap<>();
-        hashMap.put("patientemail", SharedPreferenceManager.getEmail(RelativesListHome.instance().getApplicationContext()));
-        hashMap.put("relativeemail",relativeEmail);
-        GsonRequest jsonRequest= new GsonRequest(Urls.WEB_SERVICE_CHECK_TRUSTED_URL, Request.Method.POST, Status.class,hashMap, new Response.Listener<Status>() {
-            @Override
-            public void onResponse(Status response) {
-                checked[0] =false;
-                if(response.getStatus()==1){
-                    checked[0] =true;
-                }else{
-                    checked[0] =false;
-                }
-
-            }
-
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
-                Log.i("Response error", error.toString());
-            }
-        });
-        queue.add(jsonRequest);
-
-
-        return checked[0];
-    }
+//    public void checkTrusted(String relativeEmail){
+//        Log.i("checkTrusted: ",relativeEmail);
+//        final boolean[] checked = {false};
+//        RequestQueue queue= MySingleton.getInstance(RelativesListHome.instance().getApplicationContext()).getRequestQueue();
+//
+//        HashMap<String,String> hashMap=new HashMap<>();
+//        hashMap.put("patientemail", SharedPreferenceManager.getEmail(RelativesListHome.instance().getApplicationContext()));
+//        hashMap.put("relativeemail",relativeEmail);
+//        GsonRequest jsonRequest= new GsonRequest(Urls.WEB_SERVICE_CHECK_TRUSTED_URL, Request.Method.POST, Status.class,hashMap, new Response.Listener<Status>() {
+//            @Override
+//            public void onResponse(Status response) {
+//                checked[0] =false;
+//                Log.i("onResponse: ",response.getStatus()+"");
+//                if(response.getStatus()==1){
+//                    checked[0] =true;
+//                    Log.i("onResponse: ","true");
+//                }else{
+//                    checked[0] =false;
+//                }
+//                flagChecked=checked[0];
+//            }
+//
+//        }, new Response.ErrorListener() {
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+//
+//                Log.i("Response error", error.toString());
+//            }
+//        });
+//        queue.add(jsonRequest);
+//
+//
+//    }
 
 
     public void setTrusted(String patientEmail,String relativeEmail){

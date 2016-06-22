@@ -44,7 +44,7 @@ public abstract class Urls {
     public final static String WEB_SERVICE_BLUETOOTH_URL="http://"+Urls.IP_ADDRESS+":"+Urls.PORT_NUMBER+"/WebService/service/Bluetooth";
 
     public final static String WEB_SERVICE_SET_TRUSTED_URL="http://"+Urls.IP_ADDRESS+":"+Urls.PORT_NUMBER+"/WebService/service/trust";
-    public final static String WEB_SERVICE_CHECK_TRUSTED_URL="http://"+Urls.IP_ADDRESS+":"+Urls.PORT_NUMBER+"/WebService/service/trust/check";
+//    public final static String WEB_SERVICE_CHECK_TRUSTED_URL="http://"+Urls.IP_ADDRESS+":"+Urls.PORT_NUMBER+"/WebService/service/trust/check";
     public final static String WEB_SERVICE_REMOVE_TRUSTED_URL="http://"+Urls.IP_ADDRESS+":"+Urls.PORT_NUMBER+"/WebService/service/trust/remove";
     public final static String WEB_SERVICE_GET_TRUSTED_URL="http://"+Urls.IP_ADDRESS+":"+Urls.PORT_NUMBER+"/WebService/service/trust/get";
 
