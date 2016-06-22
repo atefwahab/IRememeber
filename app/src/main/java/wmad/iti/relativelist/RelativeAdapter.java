@@ -272,7 +272,6 @@ public class RelativeAdapter extends RecyclerView.Adapter<RelativeAdapter.ViewHo
             }
         });
         queue.add(jsonRequest);
-
     }
 
 
